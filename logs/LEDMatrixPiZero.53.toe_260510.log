@@ -1,0 +1,16 @@
+22:57:59 1218981 INFO    EnvoyExt: execute_python: completed successfully
+23:13:03 1273236 INFO    EnvoyExt: Processing: execute_python
+23:13:03 1273236 INFO    EnvoyExt: execute_python: 
+cb = op('/project1/led_matrix/fx_audio_metaball/amb_callbacks')
+old = cb.text
+
+# 1. Add POS_AUTO_SEC constant after COLOR_AUTO_SEC
+new = old.replace(
+    "COLOR_AUTO_SEC = 6.0    # seconds without co...
+23:13:03 1273236 INFO    EnvoyExt: execute_python: completed successfully
+23:13:09 1273556 INFO    EnvoyExt: Processing: get_op_errors
+23:13:13 1273823 INFO    EnvoyExt: Processing: execute_python
+23:13:13 1273823 INFO    EnvoyExt: execute_python: 
+project.save()
+result = 'saved'
+

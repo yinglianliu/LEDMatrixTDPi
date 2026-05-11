@@ -1,0 +1,62 @@
+19:18:42   14998 INFO    EnvoyExt: execute_python: completed successfully
+19:21:32   25178 INFO    EnvoyExt: Processing: execute_python
+19:21:32   25178 INFO    EnvoyExt: execute_python: 
+import numpy as np
+
+# 1. Check spectrum values (is audio getting in?)
+s = op('/project1/led_matrix/spectrum1')
+row = s.numpyArray()[0]
+spec_max = float(row.max())
+
+# 2. Check cook_trigger is connecte...
+19:21:32   25178 ERROR   EnvoyExt: execute_python failed: 'td.noiseTOP' object has no attribute 'owner' Context:/project1/led_matrix/cook_trigger
+19:21:39   25542 INFO    EnvoyExt: Processing: execute_python
+19:21:39   25542 INFO    EnvoyExt: execute_python: 
+import numpy as np
+
+s = op('/project1/led_matrix/spectrum1')
+row = s.numpyArray()[0]
+spec_max = float(row.max())
+
+a = op('/project1/led_matrix/audio_in')
+device = str(a.par.device.menuLabels[a.par.de...
+19:21:39   25542 INFO    EnvoyExt: execute_python: completed successfully
+19:21:59   26778 INFO    EnvoyExt: Processing: execute_python
+19:21:59   26778 INFO    EnvoyExt: execute_python: 
+import numpy as np
+a = op('/project1/led_matrix/audio_in')
+arr = a.numpyArray()
+if arr is not None:
+    result = {
+        'shape': str(arr.shape),
+        'max': float(arr.max()),
+        'rms': flo...
+19:21:59   26778 INFO    EnvoyExt: execute_python: completed successfully
+19:22:30   28595 INFO    EnvoyExt: Processing: execute_python
+19:22:30   28595 INFO    EnvoyExt: execute_python: 
+import numpy as np, time
+
+samples = []
+for _ in range(10):
+    a = op('/project1/led_matrix/audio_in')
+    arr = a.numpyArray()
+    if arr is not None:
+        samples.append(float(np.sqrt(np.mean(ar...
+19:22:30   28595 INFO    EnvoyExt: execute_python: completed successfully
+19:25:24   39044 INFO    EnvoyExt: Processing: execute_python
+19:25:24   39044 INFO    EnvoyExt: execute_python: 
+import numpy as np
+
+a   = op('/project1/led_matrix/audio_in')
+s   = op('/project1/led_matrix/spectrum1')
+arr = a.numpyArray()
+row = s.numpyArray()[0]
+n   = len(row)
+
+F_MIN, F_MAX, N = 60.0, 8000.0, 1...
+19:25:24   39044 INFO    EnvoyExt: execute_python: completed successfully
+19:26:21   42479 INFO    EnvoyExt: Processing: set_dat_content
+19:26:27   42856 INFO    EnvoyExt: Processing: capture_top
+19:26:41   43706 INFO    EnvoyExt: Processing: execute_python
+19:26:41   43706 INFO    EnvoyExt: execute_python: project.save()
+result = 'saved'

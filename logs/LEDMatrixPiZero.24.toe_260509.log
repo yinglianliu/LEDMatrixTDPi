@@ -1,0 +1,24 @@
+22:59:15  434977 INFO    EnvoyExt: execute_python: completed successfully
+23:04:09  452636 INFO    EnvoyExt: Processing: execute_python
+23:04:09  452636 INFO    EnvoyExt: execute_python: 
+import re
+cb = op('/project1/led_matrix/fx_audio/audio_viz_callbacks')
+m  = re.search(r'N_BARS\s*=\s*(\d+)', cb.text)
+current = m.group(1) if m else 'not found'
+
+# Also check the actual running value...
+23:04:09  452636 INFO    EnvoyExt: execute_python: completed successfully
+23:04:23  453496 INFO    EnvoyExt: Processing: edit_dat_content
+23:04:32  454048 INFO    EnvoyExt: Processing: capture_top
+23:11:50  480297 INFO    EnvoyExt: Processing: execute_python
+23:11:50  480297 INFO    EnvoyExt: execute_python: 
+vz = op('/project1/led_matrix/fx_audio/audio_viz')
+result = {
+    'outputresolution': str(vz.par.outputresolution.val),
+    'resolutionw': vz.par.resolutionw.val,
+    'resolutionh': vz.par.resolution...
+23:11:50  480297 INFO    EnvoyExt: execute_python: completed successfully
+23:11:57  480738 INFO    EnvoyExt: Processing: batch_operations
+23:12:03  481070 INFO    EnvoyExt: Processing: execute_python
+23:12:03  481070 INFO    EnvoyExt: execute_python: project.save()
+result = 'saved'

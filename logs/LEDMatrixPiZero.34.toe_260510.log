@@ -1,0 +1,27 @@
+13:23:46  525235 INFO    EnvoyExt: execute_python: completed successfully
+13:23:52  525598 INFO    EnvoyExt: Processing: capture_top
+13:24:20  527221 INFO    EnvoyExt: Processing: execute_python
+13:24:20  527221 INFO    EnvoyExt: execute_python: 
+txt = op('/project1/led_matrix/fx_text/txt')
+
+# Better: rotate hue while keeping brightness up
+# Use sin offset so R,G,B are always staggered, never all zero
+txt.par.fontcolorr.expr = 'sin(absTime.se...
+13:24:20  527221 ERROR   EnvoyExt: execute_python failed: Error in /project1/led_matrix/fx_text/txt parameter fontcolor
+13:24:36  528210 INFO    EnvoyExt: Processing: execute_python
+13:24:36  528210 INFO    EnvoyExt: execute_python: 
+comp  = op('/project1/led_matrix/fx_text')
+txt   = op('/project1/led_matrix/fx_text/txt')
+xform = op('/project1/led_matrix/fx_text/scroller')
+
+# Reset to plain white text
+txt.par.fontcolorr.val = 1.0...
+13:24:36  528210 ERROR   EnvoyExt: execute_python failed: Invalid number or type of arguments. See help for details. Value:None Type:<class 'NoneType'>.
+13:24:46  528804 INFO    EnvoyExt: Processing: execute_python
+13:24:46  528804 INFO    EnvoyExt: execute_python: 
+comp  = op('/project1/led_matrix/fx_text')
+txt   = op('/project1/led_matrix/fx_text/txt')
+xform = op('/project1/led_matrix/fx_text/scroller')
+out   = op('/project1/led_matrix/fx_text/OUT')
+
+# Reset c...

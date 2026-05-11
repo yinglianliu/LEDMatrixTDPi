@@ -1,0 +1,37 @@
+21:41:53  945075 INFO    EnvoyExt: execute_python: completed successfully
+21:43:07  949514 INFO    EnvoyExt: Processing: execute_python
+21:43:07  949514 INFO    EnvoyExt: execute_python: 
+import numpy as np
+
+sp = op('/project1/led_matrix/fx_audio/spectrum1')
+n_samp = sp.numSamples
+lo, hi = 60, min(300, n_samp)
+bass = float(np.mean([sp[0][k] for k in range(lo, hi)]))
+
+# Simulate what t...
+21:43:07  949514 INFO    EnvoyExt: execute_python: completed successfully
+21:44:15  953614 INFO    EnvoyExt: Processing: execute_python
+21:44:15  953614 INFO    EnvoyExt: execute_python: 
+cb = op('/project1/led_matrix/fx_audio_metaball/amb_callbacks')
+old = cb.text
+new = old.replace(
+    "def _process_audio():\n    sp = op('../../fx_audio/spectrum1')",
+    "def _process_audio(scriptOp...
+21:44:15  953614 INFO    EnvoyExt: execute_python: completed successfully
+21:44:24  954121 INFO    EnvoyExt: Processing: execute_python
+21:44:24  954121 INFO    EnvoyExt: execute_python: 
+import time
+time.sleep(1.0)
+
+cb_mod = mod('/project1/led_matrix/fx_audio_metaball/amb_callbacks')
+S = cb_mod._S
+if S is None:
+    result = "State None â€” not cooked yet"
+else:
+    import numpy as np...
+21:44:25  954121 INFO    EnvoyExt: execute_python: completed successfully
+21:44:33  954620 INFO    EnvoyExt: Processing: execute_python
+21:44:33  954620 INFO    EnvoyExt: execute_python: 
+project.save()
+result = 'saved'
+

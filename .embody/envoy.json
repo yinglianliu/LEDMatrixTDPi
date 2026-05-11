@@ -1,0 +1,11 @@
+{
+  "active": "LEDMatrixPiZero",
+  "td_executable": "C:/Program Files/Derivative/TouchDesigner.2025.32460/bin/TouchDesigner.exe",
+  "instances": {
+    "LEDMatrixPiZero": {
+      "toe_path": "LEDMatrixPiZero.toe",
+      "port": 9870,
+      "td_pid": 25956
+    }
+  }
+}

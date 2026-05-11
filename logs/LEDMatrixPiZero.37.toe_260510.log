@@ -1,0 +1,22 @@
+13:36:18  570319 INFO    EnvoyExt: execute_python: completed successfully
+13:39:28  581715 INFO    EnvoyExt: Processing: execute_python
+13:39:28  581715 INFO    EnvoyExt: execute_python: 
+comp  = op('/project1/led_matrix/fx_text')
+xform = op('/project1/led_matrix/fx_text/scroller')
+colorize = op('/project1/led_matrix/fx_text/colorize')
+
+# Replace transformTOP with scriptTOP
+xform.dest...
+13:39:28  581715 INFO    EnvoyExt: execute_python: completed successfully
+13:39:35  582138 INFO    EnvoyExt: Processing: execute_python
+13:39:35  582138 INFO    EnvoyExt: execute_python: 
+scroll_top = op('/project1/led_matrix/fx_text/scroller')
+docked = [(d.name, d.path) for d in scroll_top.docked]
+result = {'callbacks_par': str(scroll_top.par.callbacks.val), 'docked': docked}
+
+13:39:35  582138 INFO    EnvoyExt: execute_python: completed successfully
+13:39:59  583549 INFO    EnvoyExt: Processing: set_dat_content
+13:40:06  583998 INFO    EnvoyExt: Processing: capture_top
+13:40:22  584956 INFO    EnvoyExt: Processing: execute_python
+13:40:22  584956 INFO    EnvoyExt: execute_python: project.save()
+result = 'saved'

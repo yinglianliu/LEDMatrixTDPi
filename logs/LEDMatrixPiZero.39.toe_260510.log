@@ -1,0 +1,109 @@
+13:55:32  639536 INFO    EnvoyExt: execute_python: completed successfully
+21:30:34  904354 INFO    EnvoyExt: Processing: execute_python
+21:30:34  904354 INFO    EnvoyExt: execute_python: 
+# Check positions and fx_switch current state
+sw = op('/project1/led_matrix/fx_switch')
+comps = {
+    'fx_noise':    (op('/project1/led_matrix/fx_noise').nodeX,    op('/project1/led_matrix/fx_noise')...
+21:30:34  904354 INFO    EnvoyExt: execute_python: completed successfully
+21:33:27  914736 INFO    EnvoyExt: Processing: create_op
+21:33:31  914993 INFO    EnvoyExt: Processing: set_op_position
+21:33:41  915557 INFO    EnvoyExt: Processing: create_op
+21:33:47  915932 INFO    EnvoyExt: Processing: create_op
+21:33:52  916205 INFO    EnvoyExt: Processing: execute_python
+21:33:52  916205 INFO    EnvoyExt: execute_python: 
+p = '/project1/led_matrix/fx_audio_metaball'
+sp = op(p).create(spectrumCHOP, 'spectrum1')
+result = sp.path
+
+21:33:52  916205 ERROR   EnvoyExt: execute_python failed: Invalid number or type of arguments. See help for details. Value:(<class 'td.spectrumCHOP'>, 'spectrum1') Type:<class 'tuple'>.
+21:33:59  916646 INFO    EnvoyExt: Processing: execute_python
+21:33:59  916646 INFO    EnvoyExt: execute_python: 
+sp = op('/project1/led_matrix/fx_audio/spectrum1')
+result = f"type={sp.type}, opType={sp.OPType}" if sp else "not found"
+
+21:33:59  916646 INFO    EnvoyExt: execute_python: completed successfully
+21:34:12  917426 INFO    EnvoyExt: Processing: execute_python
+21:34:12  917426 INFO    EnvoyExt: execute_python: 
+base = op('/project1/led_matrix/fx_audio_metaball')
+
+# spectrum1
+sp = base.create(audiospectrumCHOP, 'spectrum1')
+
+# amb_trigger: 1x1 noiseTOP as cook trigger
+trig = base.create(noiseTOP, 'amb_trigge...
+21:34:12  917426 INFO    EnvoyExt: execute_python: completed successfully
+21:34:25  918193 INFO    EnvoyExt: Processing: execute_python
+21:34:25  918193 INFO    EnvoyExt: execute_python: 
+base = op('/project1/led_matrix/fx_audio_metaball')
+
+# Layout: audio_in(0,0) -> spectrum1(400,0) -> amb_viz(800,0) -> out1(1200,0)
+# amb_trigger(0,-400) feeds amb_viz as input 1
+# amb_callbacks(400,-...
+21:34:25  918193 INFO    EnvoyExt: execute_python: completed successfully
+21:34:34  918725 INFO    EnvoyExt: Processing: execute_python
+21:34:34  918725 INFO    EnvoyExt: execute_python: 
+# Copy audio device setting from fx_audio/audio_in
+src_ain = op('/project1/led_matrix/fx_audio/audio_in')
+dst_ain = op('/project1/led_matrix/fx_audio_metaball/audio_in')
+
+# Copy device index
+dst_ain....
+21:34:34  918725 INFO    EnvoyExt: execute_python: completed successfully
+21:34:41  919160 INFO    EnvoyExt: Processing: execute_python
+21:34:41  919160 INFO    EnvoyExt: execute_python: 
+viz = op('/project1/led_matrix/fx_audio_metaball/amb_viz')
+
+# Resolution: 64x64, no multiplier
+viz.par.resolutionw = 64
+viz.par.resolutionh = 64
+viz.par.resmult = False
+
+# Point callbacks to our DAT
+...
+21:34:41  919160 INFO    EnvoyExt: execute_python: completed successfully
+21:34:49  919631 INFO    EnvoyExt: Processing: execute_python
+21:34:49  919631 INFO    EnvoyExt: execute_python: 
+base = op('/project1/led_matrix/fx_audio_metaball')
+
+ain  = base.op('audio_in')
+sp   = base.op('spectrum1')
+trig = base.op('amb_trigger')
+viz  = base.op('amb_viz')
+out  = base.op('out1')
+
+# audio_in ...
+21:34:49  919631 ERROR   EnvoyExt: execute_python failed: Invalid number or type of arguments. See help for details. Value:type:audiospectrumCHOP path:/project1/led_matrix/fx_audio_metaball/spectrum1 Type:<class 'td.audiospectrumCHOP'>.
+21:34:55  920035 INFO    EnvoyExt: Processing: connect_ops
+21:35:05  920633 INFO    EnvoyExt: Processing: connect_ops
+21:35:18  921390 INFO    EnvoyExt: Processing: execute_python
+21:35:18  921390 INFO    EnvoyExt: execute_python: 
+# Check how fx_audio/audio_viz is wired - CHOP can't connect to TOP by wire
+# The spectrum is read by name in callbacks, not by wire
+viz_src = op('/project1/led_matrix/fx_audio/audio_viz')
+inputs = [...
+21:35:18  921390 ERROR   EnvoyExt: execute_python failed: 'td.Connector' object has no attribute 'op'
+21:35:23  921693 INFO    EnvoyExt: Processing: execute_python
+21:35:23  921693 INFO    EnvoyExt: execute_python: 
+viz_src = op('/project1/led_matrix/fx_audio/audio_viz')
+inputs = [c.connections for c in viz_src.inputConnectors]
+result = str(inputs)
+
+21:35:23  921693 INFO    EnvoyExt: execute_python: completed successfully
+21:35:31  922155 INFO    EnvoyExt: Processing: connect_ops
+21:35:35  922411 INFO    EnvoyExt: Processing: connect_ops
+21:35:40  922706 INFO    EnvoyExt: Processing: connect_ops
+21:36:16  924887 INFO    EnvoyExt: Processing: set_dat_content
+21:36:20  925138 INFO    EnvoyExt: Processing: get_op_errors
+21:37:28  929158 INFO    EnvoyExt: Processing: set_dat_content
+21:37:32  929416 INFO    EnvoyExt: Processing: get_op_errors
+21:37:38  929766 INFO    EnvoyExt: Processing: execute_python
+21:37:38  929766 INFO    EnvoyExt: execute_python: 
+# Switch fx_switch to input 4 (fx_audio_metaball)
+sw = op('/project1/led_matrix/fx_switch')
+sw.par.input = 4
+
+# Save project
+project.save()
+
+result = f"fx_switch input={sw.par.input.eval()}, project ...

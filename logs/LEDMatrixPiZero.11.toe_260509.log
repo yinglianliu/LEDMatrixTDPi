@@ -1,0 +1,21 @@
+18:47:33  478841 INFO    EnvoyExt: execute_python: completed successfully
+18:50:28  489395 INFO    EnvoyExt: Processing: execute_python
+18:50:28  489395 INFO    EnvoyExt: execute_python: 
+# Check scriptTOP parameters for cook-related settings
+g = op('/project1/led_matrix/audio_viz')
+result = [(p.name, p.label, str(p.val)) for p in g.pars() 
+          if any(k in p.name.lower() for k i...
+18:50:28  489395 INFO    EnvoyExt: execute_python: completed successfully
+18:51:19  492435 INFO    EnvoyExt: Processing: execute_python
+18:51:19  492435 INFO    EnvoyExt: execute_python: 
+# Create a 1x1 noiseTOP as cook trigger (changes every frame)
+parent = op('/project1/led_matrix')
+trigger = parent.create(td.noiseTOP, 'cook_trigger')
+trigger.par.outputresolution = 'custom'
+trigger....
+18:51:19  492435 INFO    EnvoyExt: execute_python: completed successfully
+18:52:11  495580 INFO    EnvoyExt: Processing: set_dat_content
+18:52:17  495929 INFO    EnvoyExt: Processing: capture_top
+18:54:35  504183 INFO    EnvoyExt: Processing: execute_python
+18:54:35  504183 INFO    EnvoyExt: execute_python: project.save()
+result = 'saved'

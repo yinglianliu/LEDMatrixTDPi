@@ -1,0 +1,47 @@
+13:21:58  518748 INFO    EnvoyExt: Processing: execute_python
+13:21:58  518748 INFO    EnvoyExt: execute_python: 
+# Check current positions of the baseCOMPs
+comps = ['fx_noise', 'fx_metaball', 'fx_audio', 'fx_switch']
+result = {c: (op(f'/project1/led_matrix/{c}').nodeX, 
+               op(f'/project1/led_matrix/...
+13:21:58  518748 INFO    EnvoyExt: execute_python: completed successfully
+13:22:36  520986 INFO    EnvoyExt: Processing: execute_python
+13:22:36  520986 INFO    EnvoyExt: execute_python: 
+parent = op('/project1/led_matrix')
+
+comp = parent.create(td.baseCOMP, 'fx_text')
+comp.nodeX = 0; comp.nodeY = -1000
+
+# Wide textTOP for scrolling content
+txt = comp.create(td.textTOP, 'txt')
+txt.par...
+13:22:36  520986 INFO    EnvoyExt: execute_python: completed successfully
+13:22:50  521845 INFO    EnvoyExt: Processing: execute_python
+13:22:50  521845 INFO    EnvoyExt: execute_python: 
+comp = op('/project1/led_matrix/fx_text')
+txt  = op('/project1/led_matrix/fx_text/txt')
+
+# Text settings
+txt.par.text        = 'HELLO  LED MATRIX  '
+txt.par.fontsizex   = 10.0
+txt.par.fontsizexunit =...
+13:22:50  521845 INFO    EnvoyExt: execute_python: completed successfully
+13:22:56  522231 INFO    EnvoyExt: Processing: execute_python
+13:22:56  522231 INFO    EnvoyExt: execute_python: 
+xform = op('/project1/led_matrix/fx_text/scroller')
+
+# Check extend menu options
+ext_opts = list(xform.par.extend.menuNames)
+
+# Set extend to cycle (repeat) so text loops seamlessly
+result = ext_opts...
+13:22:56  522231 INFO    EnvoyExt: execute_python: completed successfully
+13:23:08  522907 INFO    EnvoyExt: Processing: execute_python
+13:23:08  522907 INFO    EnvoyExt: execute_python: 
+comp  = op('/project1/led_matrix/fx_text')
+xform = op('/project1/led_matrix/fx_text/scroller')
+
+# Extend to repeat so text loops
+xform.par.extend = 'repeat'
+
+# Animate tx: scroll left at ~30px/sec â†...

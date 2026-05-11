@@ -1,0 +1,88 @@
+23:13:13 1273823 INFO    EnvoyExt: execute_python: completed successfully
+23:14:34 1278680 INFO    EnvoyExt: Processing: get_op_errors
+23:14:39 1278988 INFO    EnvoyExt: Processing: get_op_errors
+23:14:48 1279545 INFO    EnvoyExt: Processing: execute_python
+23:14:48 1279545 INFO    EnvoyExt: execute_python: 
+cb = op('/project1/led_matrix/fx_audio_metaball/amb_callbacks')
+# Find the two timer blocks to verify patching
+txt = cb.text
+pos1 = txt.find('POS_AUTO_SEC')
+pos2 = txt.find('last_pos_change')
+result ...
+23:14:48 1279545 INFO    EnvoyExt: execute_python: completed successfully
+23:14:59 1280160 INFO    EnvoyExt: Processing: execute_python
+23:14:59 1280160 INFO    EnvoyExt: execute_python: 
+cb_mod = mod('/project1/led_matrix/fx_audio_metaball/amb_callbacks')
+S = cb_mod._S
+
+# Check if new keys exist in state
+if S is None:
+    result = "State is None â€” will reinit on next cook"
+else:
+  ...
+23:14:59 1280160 INFO    EnvoyExt: execute_python: completed successfully
+23:15:08 1280719 INFO    EnvoyExt: Processing: execute_python
+23:15:08 1280719 INFO    EnvoyExt: execute_python: 
+viz = op('/project1/led_matrix/fx_audio_metaball/amb_viz')
+try:
+    viz.cook(force=True)
+    errors = viz.errors()
+    result = f"cook ok, errors: '{errors}'"
+except Exception as e:
+    result = f"ex...
+23:15:08 1280719 INFO    EnvoyExt: execute_python: completed successfully
+23:15:22 1281576 INFO    EnvoyExt: Processing: execute_python
+23:15:22 1281576 INFO    EnvoyExt: execute_python: 
+viz = op('/project1/led_matrix/fx_audio_metaball/amb_viz')
+cb_par = viz.par.callbacks.eval()
+cb_op  = viz.op(cb_par) if cb_par else None
+
+# Also check if it's actually cooking by looking at cook coun...
+23:15:22 1281576 ERROR   EnvoyExt: execute_python failed: 'td.scriptTOP' object has no attribute 'cookCount' Context:/project1/led_matrix/fx_audio_metaball/amb_viz
+23:15:27 1281854 INFO    EnvoyExt: Processing: execute_python
+23:15:27 1281854 INFO    EnvoyExt: execute_python: 
+viz = op('/project1/led_matrix/fx_audio_metaball/amb_viz')
+cb_par = viz.par.callbacks.eval()
+
+# Reset the script to force module reload
+viz.resetScript()
+
+result = f"callbacks par: '{cb_par}'\nscript...
+23:15:27 1281854 ERROR   EnvoyExt: execute_python failed: 'td.scriptTOP' object has no attribute 'resetScript' Context:/project1/led_matrix/fx_audio_metaball/amb_viz
+23:15:32 1282184 INFO    EnvoyExt: Processing: execute_python
+23:15:32 1282184 INFO    EnvoyExt: execute_python: 
+viz = op('/project1/led_matrix/fx_audio_metaball/amb_viz')
+cb_par = viz.par.callbacks.eval()
+
+# Force module reload by touching the DAT text
+cb = op('/project1/led_matrix/fx_audio_metaball/amb_callba...
+23:15:32 1282184 INFO    EnvoyExt: execute_python: completed successfully
+23:15:37 1282444 INFO    EnvoyExt: Processing: get_op_errors
+23:16:45 1286544 INFO    EnvoyExt: Processing: execute_python
+23:16:45 1286544 INFO    EnvoyExt: execute_python: 
+# Read current text to check where POS_AUTO_SEC actually ended up
+cb = op('/project1/led_matrix/fx_audio_metaball/amb_callbacks')
+txt = cb.text
+idx = txt.find('POS_AUTO_SEC')
+result = f"POS_AUTO_SEC ...
+23:16:45 1286544 INFO    EnvoyExt: execute_python: completed successfully
+23:16:55 1287121 INFO    EnvoyExt: Processing: execute_python
+23:16:55 1287121 INFO    EnvoyExt: execute_python: 
+cb = op('/project1/led_matrix/fx_audio_metaball/amb_callbacks')
+txt = cb.text
+
+# Find the COLOR_AUTO_SEC definition line and add POS_AUTO_SEC after it
+idx = txt.find('COLOR_AUTO_SEC')
+end = txt.find(...
+23:16:55 1287121 INFO    EnvoyExt: execute_python: completed successfully
+23:17:00 1287455 INFO    EnvoyExt: Processing: execute_python
+23:17:00 1287455 INFO    EnvoyExt: execute_python: 
+cb = op('/project1/led_matrix/fx_audio_metaball/amb_callbacks')
+old_line = "COLOR_AUTO_SEC = 6.0    # seconds without a colour change before auto-switching"
+new_lines = old_line + "\nPOS_AUTO_SEC   =...
+23:17:00 1287455 INFO    EnvoyExt: execute_python: completed successfully
+23:17:04 1287697 INFO    EnvoyExt: Processing: execute_python
+23:17:04 1287697 INFO    EnvoyExt: execute_python: 
+project.save()
+result = 'saved'
+

@@ -1,0 +1,12 @@
+23:17:04 1287697 INFO    EnvoyExt: execute_python: completed successfully
+23:18:40 1293464 INFO    EnvoyExt: Processing: execute_python
+23:18:40 1293464 INFO    EnvoyExt: execute_python: 
+cb = op('/project1/led_matrix/fx_audio_metaball/amb_callbacks')
+cb.text = cb.text.replace(
+    "    # Auto-jump positions if stuck for POS_AUTO_SEC\n    if t - _S['last_pos_change'] > POS_AUTO_SEC:\n...
+23:18:40 1293464 INFO    EnvoyExt: execute_python: completed successfully
+23:18:46 1293796 INFO    EnvoyExt: Processing: execute_python
+23:18:46 1293796 INFO    EnvoyExt: execute_python: 
+project.save()
+result = 'saved'
+

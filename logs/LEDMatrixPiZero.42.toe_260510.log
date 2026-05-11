@@ -1,0 +1,13 @@
+21:44:33  954620 INFO    EnvoyExt: execute_python: completed successfully
+21:46:07  960306 INFO    EnvoyExt: Processing: execute_python
+21:46:07  960306 INFO    EnvoyExt: execute_python: 
+cb = op('/project1/led_matrix/fx_audio_metaball/amb_callbacks')
+old = cb.text
+new = old.replace(
+    "    w_sum_safe = np.maximum(w_sum, 1e-6)[..., np.newaxis]\n    color = (w_r / w_sum_safe).clip(0....
+21:46:07  960306 INFO    EnvoyExt: execute_python: completed successfully
+21:46:12  960551 INFO    EnvoyExt: Processing: execute_python
+21:46:12  960551 INFO    EnvoyExt: execute_python: 
+project.save()
+result = 'saved'
+

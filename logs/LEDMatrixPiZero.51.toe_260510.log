@@ -1,0 +1,17 @@
+22:50:33 1192198 INFO    EnvoyExt: execute_python: completed successfully
+22:55:07 1208685 INFO    EnvoyExt: Processing: execute_python
+22:55:07 1208685 INFO    EnvoyExt: execute_python: 
+cb = op('/project1/led_matrix/fx_audio_metaball/amb_callbacks')
+old = cb.text
+
+# Replace _random_colors with a hue-family version
+new = old.replace(
+    """def _random_colors():
+    cols = np.random....
+22:55:07 1208685 INFO    EnvoyExt: execute_python: completed successfully
+22:55:13 1209026 INFO    EnvoyExt: Processing: get_op_errors
+22:55:17 1209274 INFO    EnvoyExt: Processing: execute_python
+22:55:17 1209274 INFO    EnvoyExt: execute_python: 
+project.save()
+result = 'saved'
+

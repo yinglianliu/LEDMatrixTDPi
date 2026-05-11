@@ -1,0 +1,16 @@
+21:47:58  966926 INFO    EnvoyExt: execute_python: completed successfully
+21:51:38  980139 INFO    EnvoyExt: Processing: execute_python
+21:51:38  980139 INFO    EnvoyExt: execute_python: 
+cb = op('/project1/led_matrix/fx_audio_metaball/amb_callbacks')
+old = cb.text
+
+# Replace the entire field computation + compositing block
+old_block = """    xx, yy = _S['xx'], _S['yy']
+    field  = n...
+21:51:38  980139 INFO    EnvoyExt: execute_python: completed successfully
+21:51:43  980442 INFO    EnvoyExt: Processing: get_op_errors
+21:51:47  980682 INFO    EnvoyExt: Processing: execute_python
+21:51:47  980682 INFO    EnvoyExt: execute_python: 
+project.save()
+result = 'saved'
+

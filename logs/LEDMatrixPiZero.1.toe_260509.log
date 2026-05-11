@@ -1,0 +1,24 @@
+15:46:40   62578 INFO    EnvoyExt: execute_python: completed successfully
+15:55:31   94438 INFO    EnvoyExt: Processing: get_network_layout
+15:55:47   95355 INFO    EnvoyExt: Processing: batch_operations
+15:55:52   95701 INFO    EnvoyExt: Processing: get_network_layout
+15:56:33   98125 INFO    EnvoyExt: Processing: batch_operations
+15:56:51   99215 INFO    EnvoyExt: Processing: set_dat_content
+15:56:57   99574 INFO    EnvoyExt: Processing: get_op_errors
+15:57:11  100394 INFO    EnvoyExt: Processing: capture_top
+15:58:21  104613 INFO    EnvoyExt: Processing: set_parameter
+15:58:36  105532 INFO    EnvoyExt: Processing: set_dat_content
+15:58:43  105956 INFO    EnvoyExt: Processing: capture_top
+15:59:12  107701 INFO    EnvoyExt: Processing: execute_python
+15:59:12  107701 INFO    EnvoyExt: execute_python: 
+g = op('/project1/led_matrix/viz_led')
+result = [(p.name, p.label, str(p.val)) for p in g.pars() if any(k in p.name.lower() for k in ['pixel', 'dat', 'shader', 'glsl'])]
+
+15:59:12  107701 INFO    EnvoyExt: execute_python: completed successfully
+15:59:23  108365 INFO    EnvoyExt: Processing: batch_operations
+15:59:33  108930 INFO    EnvoyExt: Processing: get_dat_content
+15:59:48  109841 INFO    EnvoyExt: Processing: set_dat_content
+15:59:54  110174 INFO    EnvoyExt: Processing: capture_top
+17:43:14  247332 INFO    EnvoyExt: Processing: execute_python
+17:43:14  247332 INFO    EnvoyExt: execute_python: project.save()
+result = 'saved'

@@ -1,0 +1,1359 @@
+{
+  "tools": [
+    {
+      "name": "create_op",
+      "description": "\n            Create a new operator in TouchDesigner.\n\n            Args:\n                parent_path: Path to parent COMP (e.g., \"/project1\" or \"/project1/base1\")\n                op_type: Operator type (e.g., \"baseCOMP\", \"noiseTOP\", \"waveCHOP\", \"textDAT\")\n                name: Optional name for the new operator\n\n            Returns:\n                Dict with path, name, and type of created operator\n            ",
+      "inputSchema": {
+        "properties": {
+          "parent_path": {
+            "title": "Parent Path",
+            "type": "string"
+          },
+          "op_type": {
+            "title": "Op Type",
+            "type": "string"
+          },
+          "name": {
+            "default": null,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "parent_path",
+          "op_type"
+        ],
+        "title": "create_opArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "delete_op",
+      "description": "\n            Delete an operator.\n\n            Args:\n                op_path: Full path to the operator (e.g., \"/project1/base1\")\n\n            Returns:\n                Dict with success status\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "delete_opArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_op",
+      "description": "\n            Get detailed information about an operator.\n\n            Args:\n                op_path: Full path to the operator\n\n            Returns:\n                Dict with operator info including type, family, parameters, inputs, outputs\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "get_opArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "set_parameter",
+      "description": "\n            Set a parameter value, expression, bind expression, or mode on an operator.\n\n            Args:\n                op_path: Full path to the operator\n                par_name: Parameter name (e.g., \"tx\", \"frequency\", \"file\")\n                value: Constant value to set (used when mode is CONSTANT or unspecified)\n                mode: Parameter mode - \"constant\", \"expression\", \"export\", or \"bind\"\n                expr: Python expression string (sets mode to EXPRESSION automatically)\n                bind_expr: Bind expression string (sets mode to BIND automatically)\n\n            Returns:\n                Dict with success status and new value\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "par_name": {
+            "title": "Par Name",
+            "type": "string"
+          },
+          "value": {
+            "default": null,
+            "title": "Value",
+            "type": "string"
+          },
+          "mode": {
+            "default": null,
+            "title": "Mode",
+            "type": "string"
+          },
+          "expr": {
+            "default": null,
+            "title": "Expr",
+            "type": "string"
+          },
+          "bind_expr": {
+            "default": null,
+            "title": "Bind Expr",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path",
+          "par_name"
+        ],
+        "title": "set_parameterArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_parameter",
+      "description": "\n            Get a parameter value from an operator.\n\n            Args:\n                op_path: Full path to the operator\n                par_name: Parameter name\n\n            Returns:\n                Dict with parameter value, mode, expression, bind expression,\n                export source, label, min/max, and default value\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "par_name": {
+            "title": "Par Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path",
+          "par_name"
+        ],
+        "title": "get_parameterArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "connect_ops",
+      "description": "\n            Connect two operators with a wire.\n\n            Args:\n                source_path: Path to source operator (output)\n                dest_path: Path to destination operator (input)\n                source_index: Output connector index (default 0)\n                dest_index: Input connector index (default 0)\n                comp: If True, use COMP connectors (top/bottom) instead of operator connectors (left/right)\n\n            Returns:\n                Dict with success status\n            ",
+      "inputSchema": {
+        "properties": {
+          "source_path": {
+            "title": "Source Path",
+            "type": "string"
+          },
+          "dest_path": {
+            "title": "Dest Path",
+            "type": "string"
+          },
+          "source_index": {
+            "default": 0,
+            "title": "Source Index",
+            "type": "integer"
+          },
+          "dest_index": {
+            "default": 0,
+            "title": "Dest Index",
+            "type": "integer"
+          },
+          "comp": {
+            "default": false,
+            "title": "Comp",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "source_path",
+          "dest_path"
+        ],
+        "title": "connect_opsArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "disconnect_op",
+      "description": "\n            Disconnect an operator's input.\n\n            Args:\n                op_path: Path to the operator\n                input_index: Input connector index to disconnect (default 0)\n                comp: If True, disconnect a COMP connector (top/bottom) instead of operator connector (left/right)\n\n            Returns:\n                Dict with success status\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "input_index": {
+            "default": 0,
+            "title": "Input Index",
+            "type": "integer"
+          },
+          "comp": {
+            "default": false,
+            "title": "Comp",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "disconnect_opArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "query_network",
+      "description": "\n            List all operators in a network/container.\n\n            Args:\n                parent_path: Path to parent COMP to search in (default \"/\")\n                recursive: If True, search recursively into child COMPs\n                op_type: Filter by operator type (e.g., \"baseCOMP\", \"TOP\", \"annotateCOMP\")\n                include_utility: If True, include utility operators like annotations (default False)\n\n            Returns:\n                Dict with list of operators and their basic info\n            ",
+      "inputSchema": {
+        "properties": {
+          "parent_path": {
+            "default": "/",
+            "title": "Parent Path",
+            "type": "string"
+          },
+          "recursive": {
+            "default": false,
+            "title": "Recursive",
+            "type": "boolean"
+          },
+          "op_type": {
+            "default": null,
+            "title": "Op Type",
+            "type": "string"
+          },
+          "include_utility": {
+            "default": false,
+            "title": "Include Utility",
+            "type": "boolean"
+          }
+        },
+        "title": "query_networkArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "copy_op",
+      "description": "\n            Copy an operator to a new location.\n\n            Args:\n                source_path: Path to operator to copy\n                dest_parent: Path to destination parent COMP\n                new_name: Optional new name for the copy\n\n            Returns:\n                Dict with path to new operator\n            ",
+      "inputSchema": {
+        "properties": {
+          "source_path": {
+            "title": "Source Path",
+            "type": "string"
+          },
+          "dest_parent": {
+            "title": "Dest Parent",
+            "type": "string"
+          },
+          "new_name": {
+            "default": null,
+            "title": "New Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_path",
+          "dest_parent"
+        ],
+        "title": "copy_opArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_connections",
+      "description": "\n            Get all input and output connections for an operator.\n\n            Args:\n                op_path: Path to the operator\n\n            Returns:\n                Dict with inputs and outputs lists\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "get_connectionsArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "execute_python",
+      "description": "\n            Execute arbitrary Python code in TouchDesigner.\n            Use with caution - code runs on main thread with full TD access.\n\n            Args:\n                code: Python code to execute\n\n            Returns:\n                Dict with execution result or error\n            ",
+      "inputSchema": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "title": "execute_pythonArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_td_info",
+      "description": "\n            Get information about the TouchDesigner environment and Envoy server.\n\n            Returns:\n                Dict with TD version, build, OS info, and Envoy/Embody versions\n            ",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_td_infoArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_op_errors",
+      "description": "\n            Get error and warning messages for an operator and optionally its children.\n            Useful for debugging TD networks -- returns both errors and warnings.\n\n            Args:\n                op_path: Path to the operator to check\n                recurse: If True, also check children (default True)\n\n            Returns:\n                Dict with structured error and warning lists\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "recurse": {
+            "default": true,
+            "title": "Recurse",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "get_op_errorsArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "exec_op_method",
+      "description": "\n            Call a method on a TouchDesigner operator.\n            Example: exec_op_method(\"/project1/table1\", \"appendRow\", args=[[\"a\", \"b\", \"c\"]])\n\n            Args:\n                op_path: Path to the operator\n                method: Method name to call (e.g., \"appendRow\", \"clear\", \"cook\")\n                args: Positional arguments as a list (default [])\n                kwargs: Keyword arguments as a dict (default {})\n\n            Returns:\n                Dict with method result\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "method": {
+            "title": "Method",
+            "type": "string"
+          },
+          "args": {
+            "default": null,
+            "items": {},
+            "title": "Args",
+            "type": "array"
+          },
+          "kwargs": {
+            "additionalProperties": true,
+            "default": null,
+            "title": "Kwargs",
+            "type": "object"
+          }
+        },
+        "required": [
+          "op_path",
+          "method"
+        ],
+        "title": "exec_op_methodArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_td_classes",
+      "description": "\n            List all Python classes and modules available in the TouchDesigner td module.\n            Useful for discovering TD's Python API.\n\n            Returns:\n                Dict with list of class names and descriptions\n            ",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_td_classesArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_td_class_details",
+      "description": "\n            Get detailed information about a specific TouchDesigner Python class.\n            Shows methods, properties, and descriptions.\n\n            Args:\n                class_name: Name of the class in the td module (e.g., \"OP\", \"COMP\", \"Par\")\n\n            Returns:\n                Dict with class methods, properties, and descriptions\n            ",
+      "inputSchema": {
+        "properties": {
+          "class_name": {
+            "title": "Class Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "class_name"
+        ],
+        "title": "get_td_class_detailsArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_module_help",
+      "description": "\n            Get Python help text for a TouchDesigner module or class.\n            Supports dotted names like \"td.tdu\" or simple names like \"OP\".\n\n            Args:\n                module_name: Module or class name (e.g., \"td\", \"td.tdu\", \"OP\", \"Par\")\n\n            Returns:\n                Dict with module name and help text\n            ",
+      "inputSchema": {
+        "properties": {
+          "module_name": {
+            "title": "Module Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "module_name"
+        ],
+        "title": "get_module_helpArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_dat_content",
+      "description": "\n            Get the content of a DAT operator (text or table data).\n\n            Args:\n                op_path: Path to the DAT operator\n                format: \"text\" for raw text, \"table\" for row/column data,\n                       \"auto\" to detect based on DAT type\n\n            Returns:\n                Dict with DAT content (text string or table rows/cols)\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "format": {
+            "default": "auto",
+            "title": "Format",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "get_dat_contentArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "set_dat_content",
+      "description": "\n            Full-replace the content of a DAT operator. NOT incremental --\n            the entire DAT is replaced by what you send.\n\n            For partial edits to text DATs, prefer edit_dat_content --\n            it takes old_string/new_string and only sends the changed\n            substring across the wire (much cheaper for large DATs).\n\n            Workflow for full replace:\n              1. get_dat_content(op_path) to read the current content\n              2. Modify the returned content in memory\n              3. set_dat_content(op_path, text=full_modified_content)\n\n            Sending only the part you changed will destroy everything else.\n\n            Guardrails:\n              - No-content guard: refuses calls with no actionable args\n                (text=None, rows=None, clear=False -- you passed nothing).\n              - Wipe guard: refuses calls that would leave the DAT empty\n                (text=\"\", rows=[], or clear=True with no replacement\n                content) unless confirm_wipe=True. Most \"wipe\" calls are\n                accidents from malformed input -- the guard interrupts\n                so you can verify intent before destroying content.\n\n            Args:\n                op_path: Path to the DAT operator\n                text: Full text content to set (replaces entire DAT)\n                rows: List of lists to set as table rows (replaces entire table)\n                clear: Optional. Redundant when text/rows is also provided\n                    (assignment already replaces the entire content).\n                    Use alone with confirm_wipe=True to explicitly empty\n                    a DAT (e.g. resetting a FIFO log).\n                confirm_wipe: Safety flag. Set True ONLY when you have\n                    explicitly verified the DAT should become empty.\n                    Default False refuses wipes.\n\n            Returns:\n                Dict with success status, or {'error': ...} if a guard trips\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "text": {
+            "default": null,
+            "title": "Text",
+            "type": "string"
+          },
+          "rows": {
+            "default": null,
+            "items": {},
+            "title": "Rows",
+            "type": "array"
+          },
+          "clear": {
+            "default": false,
+            "title": "Clear",
+            "type": "boolean"
+          },
+          "confirm_wipe": {
+            "default": false,
+            "title": "Confirm Wipe",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "set_dat_contentArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "edit_dat_content",
+      "description": "\n            Surgical text edit on a DAT -- replaces old_string with\n            new_string. Token-efficient alternative to set_dat_content\n            for partial edits: only the changed substring crosses the\n            wire, not the whole DAT.\n\n            Mirrors Claude Code's Edit tool semantics:\n              - old_string must appear exactly once by default. If it\n                appears multiple times, either widen old_string with\n                surrounding context or pass replace_all=True.\n              - old_string and new_string must differ.\n              - old_string must be non-empty.\n\n            Text-only. For tables, use set_dat_content(rows=...) --\n            string matching across cells is a different beast.\n\n            Workflow for partial text edits:\n              1. (Optional) get_dat_content(op_path) to inspect current\n                 content if you don't already know what's there.\n              2. edit_dat_content(op_path, old_string=..., new_string=...)\n              No second round-trip needed for the write.\n\n            Guardrails:\n              - Refuses non-text DATs (use set_dat_content for tables).\n              - Refuses empty old_string (would match every position).\n              - Refuses old_string == new_string (no-op).\n              - Wipe guard: if the resulting text would be empty,\n                requires confirm_wipe=True (mirrors set_dat_content).\n              - Not-found error includes diagnostics (DAT length, row\n                count, case-insensitive hint) so the caller can\n                self-correct without another round-trip.\n\n            Args:\n                op_path: Path to the DAT operator\n                old_string: Text to find. Must be unique unless\n                    replace_all=True. Must not be empty.\n                new_string: Replacement text. Must differ from\n                    old_string.\n                replace_all: When True, replaces every occurrence.\n                    When False (default), requires unique match.\n                confirm_wipe: Safety flag. Set True ONLY when the\n                    edit is intended to leave the DAT empty.\n\n            Returns:\n                Dict with success, path, replacements (count of\n                substitutions made), numRows, numCols. Or\n                {'error': ...} if a guard trips.\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "old_string": {
+            "title": "Old String",
+            "type": "string"
+          },
+          "new_string": {
+            "title": "New String",
+            "type": "string"
+          },
+          "replace_all": {
+            "default": false,
+            "title": "Replace All",
+            "type": "boolean"
+          },
+          "confirm_wipe": {
+            "default": false,
+            "title": "Confirm Wipe",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "op_path",
+          "old_string",
+          "new_string"
+        ],
+        "title": "edit_dat_contentArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_op_flags",
+      "description": "\n            Get all flags/properties for an operator (bypass, lock, display, etc.).\n\n            Args:\n                op_path: Path to the operator\n\n            Returns:\n                Dict with all flag states\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "get_op_flagsArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "set_op_flags",
+      "description": "\n            Set flags/properties on an operator.\n\n            Args:\n                op_path: Path to the operator\n                bypass: Bypass flag (operator is skipped in chain)\n                lock: Lock flag (DAT contents locked from editing/cooking)\n                display: Display flag (blue flag, marks output for display)\n                render: Render flag (purple flag, marks for rendering)\n                viewer: Viewer flag (shows viewer on node tile)\n                current: Current flag (yellow flag)\n                expose: Expose flag (hides node from network view when False)\n                allowCooking: Allow cooking flag (COMPs only)\n                selected: Selected flag in network editor\n\n            Returns:\n                Dict with success status and updated flags\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "bypass": {
+            "default": null,
+            "title": "Bypass",
+            "type": "boolean"
+          },
+          "lock": {
+            "default": null,
+            "title": "Lock",
+            "type": "boolean"
+          },
+          "display": {
+            "default": null,
+            "title": "Display",
+            "type": "boolean"
+          },
+          "render": {
+            "default": null,
+            "title": "Render",
+            "type": "boolean"
+          },
+          "viewer": {
+            "default": null,
+            "title": "Viewer",
+            "type": "boolean"
+          },
+          "current": {
+            "default": null,
+            "title": "Current",
+            "type": "boolean"
+          },
+          "expose": {
+            "default": null,
+            "title": "Expose",
+            "type": "boolean"
+          },
+          "allowCooking": {
+            "default": null,
+            "title": "Allowcooking",
+            "type": "boolean"
+          },
+          "selected": {
+            "default": null,
+            "title": "Selected",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "set_op_flagsArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_op_position",
+      "description": "\n            Get an operator's position and size in the network editor.\n\n            Args:\n                op_path: Path to the operator\n\n            Returns:\n                Dict with nodeX, nodeY, nodeWidth, nodeHeight, color, comment\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "get_op_positionArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_network_layout",
+      "description": "\n            Get positions and sizes of all operators (and optionally annotations) in a COMP.\n            Use this instead of calling get_op_position repeatedly for each operator.\n\n            Args:\n                comp_path: Path to the parent COMP\n                include_annotations: Whether to include annotation positions (default True)\n\n            Returns:\n                Dict with operators list (path, name, type, nodeX, nodeY, nodeWidth, nodeHeight,\n                nodeCenterX, nodeCenterY), annotations list, and bounding_box of all operators\n            ",
+      "inputSchema": {
+        "properties": {
+          "comp_path": {
+            "title": "Comp Path",
+            "type": "string"
+          },
+          "include_annotations": {
+            "default": true,
+            "title": "Include Annotations",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "comp_path"
+        ],
+        "title": "get_network_layoutArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "set_op_position",
+      "description": "\n            Set an operator's position, size, color, or comment in the network editor.\n\n            Args:\n                op_path: Path to the operator\n                x: X position (horizontal, from left)\n                y: Y position (vertical, from bottom)\n                width: Node tile width\n                height: Node tile height\n                color: RGB color as [r, g, b] floats (0.0-1.0)\n                comment: Comment text annotation\n\n            Returns:\n                Dict with success status and new position\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "x": {
+            "default": null,
+            "title": "X",
+            "type": "integer"
+          },
+          "y": {
+            "default": null,
+            "title": "Y",
+            "type": "integer"
+          },
+          "width": {
+            "default": null,
+            "title": "Width",
+            "type": "integer"
+          },
+          "height": {
+            "default": null,
+            "title": "Height",
+            "type": "integer"
+          },
+          "color": {
+            "default": null,
+            "items": {},
+            "title": "Color",
+            "type": "array"
+          },
+          "comment": {
+            "default": null,
+            "title": "Comment",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "set_op_positionArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "layout_children",
+      "description": "\n            Auto-layout all children in a COMP using TouchDesigner's built-in layout.\n\n            Args:\n                op_path: Path to the parent COMP\n\n            Returns:\n                Dict with success status\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "layout_childrenArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "create_annotation",
+      "description": "\n            Create an annotation (Comment, Network Box, or Annotate) in the network editor.\n            Annotations are visual documentation elements for grouping, labeling, or documenting operators.\n\n            Args:\n                parent_path: Path to parent COMP where the annotation will be created\n                mode: Annotation mode - \"annotate\" (default, has title bar), \"comment\", or \"networkbox\"\n                text: Body text content\n                title: Title bar text (for Network Box and Annotate modes)\n                x: X position in the network editor\n                y: Y position in the network editor\n                width: Width of the annotation\n                height: Height of the annotation\n                color: Background color as [r, g, b] floats (0.0-1.0)\n                opacity: Opacity of the annotation (0.0-1.0)\n                name: Optional name for the annotation operator\n\n            Returns:\n                Dict with path, name, mode, and position of created annotation\n            ",
+      "inputSchema": {
+        "properties": {
+          "parent_path": {
+            "title": "Parent Path",
+            "type": "string"
+          },
+          "mode": {
+            "default": "annotate",
+            "title": "Mode",
+            "type": "string"
+          },
+          "text": {
+            "default": "",
+            "title": "Text",
+            "type": "string"
+          },
+          "title": {
+            "default": "",
+            "title": "Title",
+            "type": "string"
+          },
+          "x": {
+            "default": null,
+            "title": "X",
+            "type": "integer"
+          },
+          "y": {
+            "default": null,
+            "title": "Y",
+            "type": "integer"
+          },
+          "width": {
+            "default": null,
+            "title": "Width",
+            "type": "integer"
+          },
+          "height": {
+            "default": null,
+            "title": "Height",
+            "type": "integer"
+          },
+          "color": {
+            "default": null,
+            "items": {},
+            "title": "Color",
+            "type": "array"
+          },
+          "opacity": {
+            "default": null,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "name": {
+            "default": null,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "parent_path"
+        ],
+        "title": "create_annotationArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_annotations",
+      "description": "\n            List all annotations (Comments, Network Boxes, Annotates) in a COMP.\n\n            Args:\n                parent_path: Path to the COMP to search for annotations\n\n            Returns:\n                Dict with list of annotations and their properties including text, mode, position, and enclosed operators\n            ",
+      "inputSchema": {
+        "properties": {
+          "parent_path": {
+            "title": "Parent Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "parent_path"
+        ],
+        "title": "get_annotationsArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "set_annotation",
+      "description": "\n            Modify properties of an existing annotation.\n\n            Args:\n                op_path: Path to the annotation operator\n                text: New body text content\n                title: New title bar text\n                color: Background color as [r, g, b] floats (0.0-1.0)\n                opacity: Opacity (0.0-1.0)\n                width: New width\n                height: New height\n                x: New X position\n                y: New Y position\n\n            Returns:\n                Dict with updated annotation properties\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "text": {
+            "default": null,
+            "title": "Text",
+            "type": "string"
+          },
+          "title": {
+            "default": null,
+            "title": "Title",
+            "type": "string"
+          },
+          "color": {
+            "default": null,
+            "items": {},
+            "title": "Color",
+            "type": "array"
+          },
+          "opacity": {
+            "default": null,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "width": {
+            "default": null,
+            "title": "Width",
+            "type": "integer"
+          },
+          "height": {
+            "default": null,
+            "title": "Height",
+            "type": "integer"
+          },
+          "x": {
+            "default": null,
+            "title": "X",
+            "type": "integer"
+          },
+          "y": {
+            "default": null,
+            "title": "Y",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "set_annotationArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_enclosed_ops",
+      "description": "\n            Get the relationship between an annotation and operators.\n            If op_path is an annotation: returns the operators enclosed by it.\n            If op_path is a regular operator: returns the annotations enclosing it.\n\n            Args:\n                op_path: Path to an annotation or regular operator\n\n            Returns:\n                Dict with enclosed_ops or enclosing_annotations depending on operator type\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "get_enclosed_opsArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "rename_op",
+      "description": "\n            Rename an operator.\n\n            Args:\n                op_path: Full path to the operator\n                new_name: New name for the operator\n\n            Returns:\n                Dict with success status and new path\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "new_name": {
+            "title": "New Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path",
+          "new_name"
+        ],
+        "title": "rename_opArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "cook_op",
+      "description": "\n            Cook (evaluate) an operator.\n\n            Args:\n                op_path: Path to the operator\n                force: Force cook even if not dirty (default True)\n                recurse: Recursively cook children (default False)\n\n            Returns:\n                Dict with success status\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "force": {
+            "default": true,
+            "title": "Force",
+            "type": "boolean"
+          },
+          "recurse": {
+            "default": false,
+            "title": "Recurse",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "cook_opArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "find_children",
+      "description": "\n            Search for operators inside a COMP using TouchDesigner's findChildren.\n            Much more powerful than query_network for targeted searches.\n\n            Args:\n                op_path: Path to the parent COMP to search in\n                name: Name pattern to match (e.g., \"noise*\", \"*filter*\")\n                type: Operator type to filter (e.g., \"baseCOMP\", \"textDAT\", \"noiseTOP\", \"annotateCOMP\")\n                depth: Exact depth to search at (1 = direct children only)\n                tags: List of tags to match (operator must have all tags)\n                text: Search DAT text content for this string\n                comment: Search operator comments for this string\n                include_utility: If True, include utility operators like annotations (default False)\n\n            Returns:\n                Dict with list of matching operators\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "name": {
+            "default": null,
+            "title": "Name",
+            "type": "string"
+          },
+          "type": {
+            "default": null,
+            "title": "Type",
+            "type": "string"
+          },
+          "depth": {
+            "default": null,
+            "title": "Depth",
+            "type": "integer"
+          },
+          "tags": {
+            "default": null,
+            "items": {},
+            "title": "Tags",
+            "type": "array"
+          },
+          "text": {
+            "default": null,
+            "title": "Text",
+            "type": "string"
+          },
+          "comment": {
+            "default": null,
+            "title": "Comment",
+            "type": "string"
+          },
+          "include_utility": {
+            "default": false,
+            "title": "Include Utility",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "find_childrenArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_op_performance",
+      "description": "\n            Get performance/profiling data for an operator.\n\n            Args:\n                op_path: Path to the operator\n                include_children: Include aggregate children performance data\n\n            Returns:\n                Dict with CPU/GPU cook times, memory usage, cook counts\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "include_children": {
+            "default": false,
+            "title": "Include Children",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "get_op_performanceArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_project_performance",
+      "description": "\n            Get project-level performance metrics: FPS, frame time, GPU/CPU memory,\n            dropped frames, active operators, and more.\n\n            Uses a Perform CHOP for accurate real-time measurements. The first call\n            creates the monitor operator (negligible overhead).\n\n            Args:\n                include_hotspots: Return the top N most expensive COMPs by cook time.\n                    0 (default) skips hotspot analysis. Recommended: 5-10.\n\n            Returns:\n                Dict with timing (fps, frameTimeMs, cookRate), memory (gpuMemUsedMB,\n                totalGpuMemMB, cpuMemUsedMB), frame health (droppedFrames, activeOps,\n                totalOps), GPU info (gpuTemp), performance mode status, and optionally\n                hotspots (ranked COMPs with cook times and memory).\n            ",
+      "inputSchema": {
+        "properties": {
+          "include_hotspots": {
+            "default": 0,
+            "title": "Include Hotspots",
+            "type": "integer"
+          }
+        },
+        "title": "get_project_performanceArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "externalize_op",
+      "description": "\n            Tag an operator for Embody externalization and write it to disk.\n\n            Args:\n                op_path: Path to the operator\n                tag_type: Tag type - \"tox\" for COMPs, \"py\"/\"txt\"/\"tsv\"/\"json\" etc for DATs\n                         If None, will auto-detect based on operator type\n\n            Returns:\n                Dict with success status and applied tag\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "tag_type": {
+            "default": null,
+            "title": "Tag Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "externalize_opArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "remove_externalization_tag",
+      "description": "\n            Remove Embody externalization tag from an operator.\n\n            Args:\n                op_path: Path to the operator\n\n            Returns:\n                Dict with success status\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "remove_externalization_tagArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_externalizations",
+      "description": "\n            Get list of all externalized operators tracked by Embody.\n\n            Returns:\n                Dict with list of externalized operators and their status\n            ",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_externalizationsArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "save_externalization",
+      "description": "\n            Force save an externalized operator.\n\n            Args:\n                op_path: Path to the externalized operator\n\n            Returns:\n                Dict with success status and file path\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "save_externalizationArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_externalization_status",
+      "description": "\n            Get externalization status for an operator (dirty state, build info).\n\n            Args:\n                op_path: Path to the operator\n\n            Returns:\n                Dict with dirty state, build number, timestamp, file path\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "get_externalization_statusArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "create_extension",
+      "description": "\n            Create a TouchDesigner extension: a baseCOMP with a text DAT\n            containing a Python extension class, wired up and initialized.\n\n            Args:\n                parent_path: Where to create the new COMP, OR path to an\n                             existing COMP if existing_comp=True\n                class_name: Python class name (e.g., \"MyExtension\")\n                name: COMP name (defaults to class_name). Ignored if existing_comp=True\n                code: Full Python class code. If omitted, generates minimal boilerplate\n                promote: Promote capitalized methods to COMP level (default True)\n                ext_name: Custom extension name (defaults to class_name)\n                ext_index: Extension slot 0-3 (auto-detects first empty if omitted)\n                existing_comp: If True, parent_path IS the target COMP (no new COMP created)\n\n            Returns:\n                Dict with comp_path, dat_path, class_name, ext_index, success status\n            ",
+      "inputSchema": {
+        "properties": {
+          "parent_path": {
+            "title": "Parent Path",
+            "type": "string"
+          },
+          "class_name": {
+            "title": "Class Name",
+            "type": "string"
+          },
+          "name": {
+            "default": null,
+            "title": "Name",
+            "type": "string"
+          },
+          "code": {
+            "default": null,
+            "title": "Code",
+            "type": "string"
+          },
+          "promote": {
+            "default": true,
+            "title": "Promote",
+            "type": "boolean"
+          },
+          "ext_name": {
+            "default": null,
+            "title": "Ext Name",
+            "type": "string"
+          },
+          "ext_index": {
+            "default": null,
+            "title": "Ext Index",
+            "type": "integer"
+          },
+          "existing_comp": {
+            "default": false,
+            "title": "Existing Comp",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "parent_path",
+          "class_name"
+        ],
+        "title": "create_extensionArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "export_network",
+      "description": "\n            Export a TouchDesigner network to .tdn JSON format.\n            Only non-default properties are included, keeping output minimal.\n\n            Args:\n                root_path: Root COMP to export from (default \"/\" for entire project)\n                include_dat_content: Include DAT text/table content (default None = use Embeddatsintdns toggle)\n                output_file: File path to write JSON. Use \"auto\" to generate name. None returns dict only.\n                max_depth: Maximum recursion depth (None = unlimited)\n                embed_all: If True, recurse into TDN-tagged COMPs instead of\n                    skipping their children. Produces a self-contained export.\n\n            Returns:\n                Dict with the .tdn JSON document and optional file path\n            ",
+      "inputSchema": {
+        "properties": {
+          "root_path": {
+            "default": "/",
+            "title": "Root Path",
+            "type": "string"
+          },
+          "include_dat_content": {
+            "default": null,
+            "title": "Include Dat Content",
+            "type": "boolean"
+          },
+          "output_file": {
+            "default": null,
+            "title": "Output File",
+            "type": "string"
+          },
+          "max_depth": {
+            "default": null,
+            "title": "Max Depth",
+            "type": "integer"
+          },
+          "embed_all": {
+            "default": false,
+            "title": "Embed All",
+            "type": "boolean"
+          }
+        },
+        "title": "export_networkArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "import_network",
+      "description": "\n            Import a .tdn network into a TouchDesigner COMP, recreating all operators.\n\n            Args:\n                target_path: Destination COMP path to import into\n                tdn: The .tdn JSON document (full document or just the operators array)\n                clear_first: If True, delete all existing children before importing\n\n            Returns:\n                Dict with import results and created operator paths\n            ",
+      "inputSchema": {
+        "properties": {
+          "target_path": {
+            "title": "Target Path",
+            "type": "string"
+          },
+          "tdn": {
+            "additionalProperties": true,
+            "title": "Tdn",
+            "type": "object"
+          },
+          "clear_first": {
+            "default": false,
+            "title": "Clear First",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "target_path",
+          "tdn"
+        ],
+        "title": "import_networkArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "read_tdn",
+      "description": "\n            Read the network under comp_path as a TDN dict (live in-memory\n            state, never written to disk). Prefer this over get_op /\n            query_network when exploring more than ~3 operators -- it's\n            typically 20-90x fewer tokens thanks to default-omission,\n            type_defaults, and par_templates compaction.\n\n            Scope cost by passing a specific comp_path. Pass max_depth to\n            cap nesting if you're reading a large root. Works in all\n            Tdnmode values (Off / Export / Full) -- reads live state,\n            not the .tdn files on disk.\n\n            When NOT to use: if you need evaluated-expression runtime\n            values, cook errors, DAT/CHOP/TOP output data, cook timing,\n            or operator flag state after runtime mutation. Use\n            get_parameter, get_op_errors, get_dat_content, capture_top,\n            or get_op_flags respectively for those.\n\n            Args:\n                comp_path: Root COMP to read (default \"/\" for entire project)\n                include_dat_content: Include DAT text/table content\n                    (default None = use Embeddatsintdns toggle)\n                max_depth: Maximum recursion depth (None = unlimited)\n                embed_all: If True, recurse into TDN-tagged COMPs instead\n                    of skipping their children. Produces a self-contained\n                    view of the entire subtree.\n\n            Returns:\n                Dict with the .tdn JSON document under 'tdn' on success,\n                or 'error' on failure.\n            ",
+      "inputSchema": {
+        "properties": {
+          "comp_path": {
+            "default": "/",
+            "title": "Comp Path",
+            "type": "string"
+          },
+          "include_dat_content": {
+            "default": null,
+            "title": "Include Dat Content",
+            "type": "boolean"
+          },
+          "max_depth": {
+            "default": null,
+            "title": "Max Depth",
+            "type": "integer"
+          },
+          "embed_all": {
+            "default": false,
+            "title": "Embed All",
+            "type": "boolean"
+          }
+        },
+        "title": "read_tdnArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "capture_top",
+      "description": "\n            Capture a TOP operator's output as an image.\n\n            Returns the image saved to a temp file (path included in response).\n            Small images are also returned inline as MCP ImageContent for direct viewing.\n\n            Args:\n                op_path: Path to a TOP operator (e.g., \"/project1/null1\")\n                format: Image format - \"jpeg\" (smaller, lossy) or \"png\" (lossless)\n                quality: JPEG compression quality 0.0-1.0 (ignored for PNG)\n                max_resolution: Max pixels on longest edge. 0 = native resolution.\n\n            Returns:\n                List with text metadata and optional inline image preview\n            ",
+      "inputSchema": {
+        "properties": {
+          "op_path": {
+            "title": "Op Path",
+            "type": "string"
+          },
+          "format": {
+            "default": "jpeg",
+            "title": "Format",
+            "type": "string"
+          },
+          "quality": {
+            "default": 0.8,
+            "title": "Quality",
+            "type": "number"
+          },
+          "max_resolution": {
+            "default": 640,
+            "title": "Max Resolution",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "op_path"
+        ],
+        "title": "capture_topArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_logs",
+      "description": "\n            Get recent log entries from Embody's ring buffer.\n            Useful for debugging operations or understanding what happened.\n\n            Args:\n                level: Filter by log level (\"INFO\", \"WARNING\", \"ERROR\", \"SUCCESS\", \"DEBUG\")\n                count: Maximum number of entries to return (default 50, max 200)\n                since_id: Only return entries with id > since_id (for polling new logs)\n                source: Filter by source/caller pattern (substring match)\n\n            Returns:\n                Dict with log entries and metadata\n            ",
+      "inputSchema": {
+        "properties": {
+          "level": {
+            "default": null,
+            "title": "Level",
+            "type": "string"
+          },
+          "count": {
+            "default": 50,
+            "title": "Count",
+            "type": "integer"
+          },
+          "since_id": {
+            "default": null,
+            "title": "Since Id",
+            "type": "integer"
+          },
+          "source": {
+            "default": null,
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "title": "get_logsArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "run_tests",
+      "description": "\n            Run Embody test suites and return results.\n\n            Args:\n                suite_name: Run only this suite (e.g., \"test_path_utils\"). Omit to run all.\n                test_name: Run only this test method within the suite.\n\n            Returns:\n                Dict with passed/failed/error/skip counts and full results list\n            ",
+      "inputSchema": {
+        "properties": {
+          "suite_name": {
+            "default": null,
+            "title": "Suite Name",
+            "type": "string"
+          },
+          "test_name": {
+            "default": null,
+            "title": "Test Name",
+            "type": "string"
+          }
+        },
+        "title": "run_testsArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "batch_operations",
+      "description": "\n            Execute multiple operations in a single request.\n\n            Combines several tool calls into one round-trip, reducing latency\n            and token overhead. Stops on first error by default.\n\n            Args:\n                operations: List of dicts, each with 'tool' (str) and 'params' (dict).\n                    Example: [{\"tool\": \"set_op_position\", \"params\": {\"op_path\": \"/project1/noise1\", \"x\": 400}},\n                              {\"tool\": \"connect_ops\", \"params\": {\"source_path\": \"/project1/noise1\", \"dest_path\": \"/project1/null1\"}}]\n\n            Returns:\n                Dict with 'results' (list in same order), 'count', and 'success' (false if any failed)\n            ",
+      "inputSchema": {
+        "properties": {
+          "operations": {
+            "items": {},
+            "title": "Operations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "operations"
+        ],
+        "title": "batch_operationsArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_td_status",
+      "description": "Check if TouchDesigner is running and Envoy is reachable. Returns connection state, crash detection, process liveness, and project config. Works even when TD is down.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "launch_td",
+      "description": "Launch TouchDesigner with the project's .toe file. Use to start TD for the first time or restart after a crash. Waits for Envoy to become reachable before returning.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "timeout": {
+            "type": "integer",
+            "description": "Max seconds to wait for Envoy to become reachable after launch (default: 120)",
+            "default": 120
+          },
+          "project_path": {
+            "type": "string",
+            "description": "Override the .toe file to open. Absolute path or relative to git root. If omitted, uses the default toe_path from envoy.json."
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "restart_td",
+      "description": "Quit TouchDesigner gracefully and relaunch with the project's .toe file. Waits for the process to exit before relaunching. Use when TD is running but needs a fresh start.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "timeout": {
+            "type": "integer",
+            "description": "Max seconds to wait for Envoy to become reachable after relaunch (default: 120)",
+            "default": 120
+          },
+          "project_path": {
+            "type": "string",
+            "description": "Override the .toe file to open. Absolute path or relative to git root. If omitted, uses the default toe_path from envoy.json."
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "switch_instance",
+      "description": "Switch the active TouchDesigner instance or list all registered instances. Omit the instance parameter to list available instances with their status. Provide an instance name (toe basename) to switch the bridge to that instance.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instance": {
+            "type": "string",
+            "description": "Instance name to switch to (toe basename without .toe extension). Omit to list all instances."
+          }
+        },
+        "required": []
+      }
+    }
+  ]
+}

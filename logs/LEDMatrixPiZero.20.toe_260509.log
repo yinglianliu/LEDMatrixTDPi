@@ -1,0 +1,27 @@
+22:40:23  367092 INFO    EnvoyExt: execute_python: completed successfully
+22:43:34  378551 INFO    EnvoyExt: Processing: execute_python
+22:43:34  378551 INFO    EnvoyExt: execute_python: 
+# Check current connections to level1
+l = op('/project1/led_matrix/level1')
+ins = [c.owner.name for c in l.inputs if c]
+
+# Check metaballs and noise1 connections
+m = op('/project1/led_matrix/metaball...
+22:43:34  378551 ERROR   EnvoyExt: execute_python failed: 'td.scriptTOP' object has no attribute 'owner' Context:/project1/led_matrix/audio_viz
+22:43:40  378931 INFO    EnvoyExt: Processing: execute_python
+22:43:40  378931 INFO    EnvoyExt: execute_python: 
+l = op('/project1/led_matrix/level1')
+ins = [c.name for c in l.inputs if c]
+
+m = op('/project1/led_matrix/metaballs')
+n = op('/project1/led_matrix/noise1')
+m_out = [c.owner.name for conn in m.outputC...
+22:43:40  378931 INFO    EnvoyExt: execute_python: completed successfully
+22:43:51  379621 INFO    EnvoyExt: Processing: get_network_layout
+22:44:27  381733 INFO    EnvoyExt: Processing: batch_operations
+22:44:50  383145 INFO    EnvoyExt: Processing: batch_operations
+22:45:02  383869 INFO    EnvoyExt: Processing: batch_operations
+22:45:14  384607 INFO    EnvoyExt: Processing: get_op_errors
+22:45:32  385685 INFO    EnvoyExt: Processing: execute_python
+22:45:32  385685 INFO    EnvoyExt: execute_python: project.save()
+result = 'saved'

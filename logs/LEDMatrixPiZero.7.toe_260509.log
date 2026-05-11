@@ -1,0 +1,43 @@
+18:23:56  393859 INFO    EnvoyExt: execute_python: completed successfully
+18:25:39  400008 INFO    EnvoyExt: Processing: execute_python
+18:25:39  400008 INFO    EnvoyExt: execute_python: 
+import numpy as np
+s = op('/project1/led_matrix/spectrum1')
+spec = s.numpyArray()[0]
+n = len(spec)
+
+F_MIN, F_MAX, W = 60.0, 16000.0, 64
+hz = F_MAX * 2.0 / n
+
+vals = []
+for x in range(W):
+    lo = max...
+18:25:39  400008 INFO    EnvoyExt: execute_python: completed successfully
+18:27:48  407759 INFO    EnvoyExt: Processing: batch_operations
+18:27:48  407759 INFO    EnvoyExt: execute_python: 
+import numpy as np
+s = op('/project1/led_matrix/spectrum1')
+spec = s.numpyArray()[0]
+n = len(spec)
+
+# With linear spectrum, sample k ~ k Hz
+# Check values at key frequencies
+result = {}
+for freq in [...
+18:27:48  407759 INFO    EnvoyExt: execute_python: completed successfully
+18:29:18  413176 INFO    EnvoyExt: Processing: set_dat_content
+18:29:27  413719 INFO    EnvoyExt: Processing: execute_python
+18:29:27  413719 INFO    EnvoyExt: execute_python: 
+import numpy as np
+s = op('/project1/led_matrix/spectrum1')
+spec = s.numpyArray()[0]
+n = len(spec)
+
+F_MIN, F_MAX, W = 60.0, 14000.0, 64
+rows = []
+for x in range(0, W, 8):
+    lo = max(0, int(F_MIN*(F...
+18:29:27  413719 INFO    EnvoyExt: execute_python: completed successfully
+18:29:52  415239 INFO    EnvoyExt: Processing: execute_python
+18:29:52  415239 INFO    EnvoyExt: execute_python: project.save()
+result = 'saved'

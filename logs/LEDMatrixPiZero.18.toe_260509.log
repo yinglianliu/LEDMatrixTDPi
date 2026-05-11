@@ -1,0 +1,7 @@
+19:39:46   90781 INFO    EnvoyExt: execute_python: completed successfully
+22:35:47  350582 INFO    EnvoyExt: Processing: set_parameter
+22:35:57  351159 INFO    EnvoyExt: Processing: edit_dat_content
+22:36:03  351491 INFO    EnvoyExt: Processing: capture_top
+22:36:16  352327 INFO    EnvoyExt: Processing: execute_python
+22:36:16  352327 INFO    EnvoyExt: execute_python: project.save()
+result = 'saved'
