@@ -11,7 +11,8 @@ opts.cols             = cfg.COLS
 opts.hardware_mapping = cfg.HARDWARE_MAPPING
 opts.row_address_type = cfg.ROW_ADDRESS_TYPE
 opts.gpio_slowdown    = cfg.GPIO_SLOWDOWN
-opts.drop_privileges  = False
+opts.drop_privileges          = False
+opts.disable_hardware_pulsing = True
 
 matrix = RGBMatrix(options=opts)
 canvas = matrix.CreateFrameCanvas()

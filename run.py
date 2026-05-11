@@ -80,8 +80,9 @@ def build_matrix():
     opts.hardware_mapping = cfg.HARDWARE_MAPPING
     opts.row_address_type = cfg.ROW_ADDRESS_TYPE
     opts.gpio_slowdown    = cfg.GPIO_SLOWDOWN
-    opts.pwm_bits         = cfg.PWM_BITS
-    opts.drop_privileges  = cfg.DROP_PRIVILEGES
+    opts.pwm_bits              = cfg.PWM_BITS
+    opts.drop_privileges       = cfg.DROP_PRIVILEGES
+    opts.disable_hardware_pulsing = getattr(cfg, 'NO_HARDWARE_PULSE', False)
     return RGBMatrix(options=opts)
 
 

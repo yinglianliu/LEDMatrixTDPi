@@ -10,6 +10,7 @@ ROW_ADDRESS_TYPE   = 1    # 64-row panels need E address line (solder jumper →
 GPIO_SLOWDOWN      = 4    # Pi Zero 2W: 3-4
 PWM_BITS           = 11
 DROP_PRIVILEGES    = False
+NO_HARDWARE_PULSE  = True  # avoids conflict with snd_bcm2835 on Pi OS Bookworm+
 
 TARGET_FPS         = 30   # Pi Zero 2W comfortable ceiling
 
