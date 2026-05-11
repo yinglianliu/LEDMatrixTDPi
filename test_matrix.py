@@ -1,45 +1,31 @@
-import sys, time, numpy as np
+import sys, time
 sys.path.insert(0, 'pi_effects')
 import config as cfg
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
-from PIL import Image
 
-def make_matrix(limit_hz=0):
-    opts = RGBMatrixOptions()
-    opts.rows                     = cfg.ROWS
-    opts.cols                     = cfg.COLS
-    opts.hardware_mapping         = cfg.HARDWARE_MAPPING
-    opts.row_address_type         = cfg.ROW_ADDRESS_TYPE
-    opts.gpio_slowdown            = cfg.GPIO_SLOWDOWN
-    opts.drop_privileges          = False
-    opts.disable_hardware_pulsing = True
-    if limit_hz > 0:
-        opts.limit_refresh_rate_hz = limit_hz
-    return RGBMatrix(options=opts)
+opts = RGBMatrixOptions()
+opts.rows                     = cfg.ROWS
+opts.cols                     = cfg.COLS
+opts.hardware_mapping         = cfg.HARDWARE_MAPPING
+opts.row_address_type         = cfg.ROW_ADDRESS_TYPE
+opts.gpio_slowdown            = cfg.GPIO_SLOWDOWN
+opts.drop_privileges          = False
+opts.disable_hardware_pulsing = True
 
-arr = np.full((cfg.ROWS, cfg.COLS, 3), [255, 0, 0], dtype='uint8')
-img = Image.fromarray(arr, 'RGB')
+matrix = RGBMatrix(options=opts)
 
-# Test 1: loop with 30fps sleep
-print("Test 1: loop + sleep(0.033)...")
-m = make_matrix()
-c = m.CreateFrameCanvas()
+# Test A: canvas.Fill in a loop (no PIL)
+print("Test A: canvas.Fill(255,0,0) loop 5s...")
+canvas = matrix.CreateFrameCanvas()
 end = time.monotonic() + 5.0
 while time.monotonic() < end:
-    c.SetImage(img)
-    c = m.SwapOnVSync(c)
-    time.sleep(0.033)
-m.Clear()
-input("Test 1 done — rows lit? Press Enter for Test 2...")
+    canvas.Fill(255, 0, 0)
+    canvas = matrix.SwapOnVSync(canvas)
+matrix.Clear()
+input("Test A done — rows lit? Enter for Test B...")
 
-# Test 2: limit refresh rate via options
-print("Test 2: limit_refresh_rate_hz=100...")
-m2 = make_matrix(limit_hz=100)
-c2 = m2.CreateFrameCanvas()
-end = time.monotonic() + 5.0
-while time.monotonic() < end:
-    c2.SetImage(img)
-    c2 = m2.SwapOnVSync(c2)
-m2.Clear()
-input("Test 2 done — rows lit? Press Enter to quit...")
-print("Done")
+# Test B: matrix.Fill directly (no canvas)
+print("Test B: matrix.Fill(255,0,0) + input...")
+matrix.Fill(255, 0, 0)
+input("Test B done — rows lit? Enter to quit...")
+matrix.Clear()
