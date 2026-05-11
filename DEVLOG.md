@@ -407,3 +407,71 @@ COLOR_AUTO_SEC = 6.0   # seconds of no change before auto palette switch
 COLOR_LERP     = 0.04  # colour crossfade speed
 hue_spread     = 0.12  # palette width in _random_colors(); 0=identical, 0.25=quarter colour wheel
 ```
+
+---
+
+## 2026-05-11 — Pi Zero 2W Hardware Bring-up
+
+---
+
+### [Hardware] Waveshare P2 64x64 needs ROW_ADDRESS_TYPE=0, not 1
+
+**Symptom**: Only 2–3 rows lit regardless of content. All multiplexing values and all ROW_ADDRESS_TYPE values (0–3) appeared to show the same result.
+
+**Cause**: The Waveshare RGB-Matrix-P2-64x64 panel uses HUB75E connector (which implies a 5th address line E and ROW_ADDRESS_TYPE=1), but this specific panel does NOT use the E address line for row selection. Setting ROW_ADDRESS_TYPE=1 confuses the row scanner and only a handful of rows are ever selected.
+
+**Fix**: Set `ROW_ADDRESS_TYPE = 0` in `pi_effects/config.py`. Despite the HUB75E connector, this panel behaves like a standard 1/16-scan panel that only needs A, B, C, D address lines.
+
+**Lesson**: HUB75E connector does not guarantee ROW_ADDRESS_TYPE=1. Always verify with a solid-fill test across all ROW_ADDRESS_TYPE values (0–3).
+
+---
+
+### [Hardware] snd_bcm2835 causes LED matrix flickering on Pi OS Bookworm
+
+**Symptom**: Display flickers ("TV static") when running any animation loop. Solid single-frame display is clean.
+
+**Cause**: The `snd_bcm2835` audio module uses the same hardware PWM as rpi-rgb-led-matrix. When both are active, the matrix refresh is interrupted, causing flickering.
+
+**Attempted fixes that did NOT work**:
+- `dtparam=audio=off` in config.txt (overridden by vc4-kms-v3d overlay)
+- `blacklist snd_bcm2835` in modprobe.d (device tree ignores modprobe blacklist)
+- `sudo modprobe -r snd_bcm2835` (temporary only, reloads on reboot)
+
+**Fix that worked**:
+1. Change `dtoverlay=vc4-kms-v3d` → `dtoverlay=vc4-kms-v3d,noaudio` in `/boot/firmware/config.txt`
+2. Comment out `#dtparam=audio=on`
+3. Set `NO_HARDWARE_PULSE = False` in config.py (can use hardware PWM once audio overlay is disabled)
+
+The `noaudio` parameter on the vc4-kms-v3d overlay prevents it from claiming the hardware PWM, allowing rpi-rgb-led-matrix to use it without conflict.
+
+---
+
+### [Software] rpi-rgb-led-matrix Python install requires swap on Pi Zero 2W
+
+**Symptom**: `sudo pip3 install .` hung indefinitely or caused Pi to crash/freeze during C++ compilation.
+
+**Cause**: Pi Zero 2W only has 512MB RAM. Compiling C++ extensions (via cmake + scikit-build-core) requires ~800MB+ of memory. Default swap (100MB) was not enough.
+
+**Fix**:
+```bash
+sudo apt-get install -y dphys-swapfile
+sudo dphys-swapfile swapoff
+sudo sed -i 's/CONF_SWAPSIZE=.*/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+sudo dphys-swapfile setup
+sudo dphys-swapfile swapon
+sudo pip3 install --break-system-packages .
+```
+
+---
+
+### [Software] New rpi-rgb-led-matrix uses cmake, not make build-python
+
+**Symptom**: `make build-python PYTHON=$(which python3)` returns "No rule to make target".
+
+**Cause**: Newer versions of hzeller/rpi-rgb-led-matrix switched from a custom Makefile to scikit-build-core + cmake for Python bindings.
+
+**Fix**:
+```bash
+sudo apt-get install -y cmake cython3
+sudo pip3 install --break-system-packages .   # from repo root
+```
