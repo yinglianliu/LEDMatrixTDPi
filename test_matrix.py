@@ -1,7 +1,9 @@
-import sys, time
+"""Definitive test: single SwapOnVSync with sleep (no loop)."""
+import sys, time, numpy as np
 sys.path.insert(0, 'pi_effects')
 import config as cfg
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
+from PIL import Image
 
 opts = RGBMatrixOptions()
 opts.rows                     = cfg.ROWS
@@ -14,18 +16,17 @@ opts.disable_hardware_pulsing = True
 
 matrix = RGBMatrix(options=opts)
 
-# Test A: canvas.Fill in a loop (no PIL)
-print("Test A: canvas.Fill(255,0,0) loop 5s...")
-canvas = matrix.CreateFrameCanvas()
-end = time.monotonic() + 5.0
-while time.monotonic() < end:
-    canvas.Fill(255, 0, 0)
-    canvas = matrix.SwapOnVSync(canvas)
-matrix.Clear()
-input("Test A done — rows lit? Enter for Test B...")
+def show(r, g, b, label, seconds):
+    canvas = matrix.CreateFrameCanvas()
+    canvas.Fill(r, g, b)
+    matrix.SwapOnVSync(canvas)
+    print(f"{label} — showing for {seconds}s, count the rows NOW")
+    time.sleep(seconds)
+    matrix.Clear()
+    time.sleep(0.5)
 
-# Test B: matrix.Fill directly (no canvas)
-print("Test B: matrix.Fill(255,0,0) + input...")
-matrix.Fill(255, 0, 0)
-input("Test B done — rows lit? Enter to quit...")
-matrix.Clear()
+show(255,   0,   0, "RED",   5)
+show(  0, 255,   0, "GREEN", 5)
+show(  0,   0, 255, "BLUE",  5)
+
+print("Done — all tests complete")
