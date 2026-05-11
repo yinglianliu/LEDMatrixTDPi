@@ -8,7 +8,7 @@ PARALLEL           = 1
 HARDWARE_MAPPING   = 'adafruit-hat'
 ROW_ADDRESS_TYPE   = 0    # Waveshare P2 64x64 uses type 0 (not 1 despite HUB75E)
 GPIO_SLOWDOWN      = 4    # Pi Zero 2W: 3-4
-PWM_BITS           = 11
+PWM_BITS           = 8     # lower = less flicker with software PWM (was 11)
 DROP_PRIVILEGES    = False
 NO_HARDWARE_PULSE  = True  # avoids conflict with snd_bcm2835 on Pi OS Bookworm+
 

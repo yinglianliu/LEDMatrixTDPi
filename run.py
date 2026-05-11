@@ -83,6 +83,7 @@ def build_matrix():
     opts.pwm_bits              = cfg.PWM_BITS
     opts.drop_privileges       = cfg.DROP_PRIVILEGES
     opts.disable_hardware_pulsing = getattr(cfg, 'NO_HARDWARE_PULSE', False)
+    opts.limit_refresh_rate_hz    = 100   # cap refresh to reduce flicker
     return RGBMatrix(options=opts)
 
 
@@ -162,8 +163,9 @@ def run_standalone(matrix):
             frame = time.monotonic()
 
             arr = effects[cur].render(t)
+            canvas = matrix.CreateFrameCanvas()
             canvas.SetImage(Image.fromarray(arr, 'RGB'))
-            canvas = matrix.SwapOnVSync(canvas)
+            matrix.SwapOnVSync(canvas)
 
             elapsed = time.monotonic() - frame
             sleep   = frame_time - elapsed
