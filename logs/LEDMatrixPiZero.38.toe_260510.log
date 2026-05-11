@@ -1,5 +1,0 @@
-13:40:22  584956 INFO    EnvoyExt: execute_python: completed successfully
-13:55:18  638669 INFO    EnvoyExt: Processing: edit_dat_content
-13:55:32  639536 INFO    EnvoyExt: Processing: execute_python
-13:55:32  639536 INFO    EnvoyExt: execute_python: project.save()
-result = 'saved'

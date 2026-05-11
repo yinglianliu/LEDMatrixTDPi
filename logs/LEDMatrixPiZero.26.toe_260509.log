@@ -1,7 +1,0 @@
-23:12:50       3 INFO    execute:10: Embody v5.0.403 | TouchDesigner 099.2025.32460 | Windows 10
-23:12:50       3 INFO    EmbodyExt: Restored 48 settings from config.json
-23:12:50       3 INFO    CatalogManagerExt: [CatalogManager] Loaded catalog for build 099.2025.32460
-23:12:50      15 INFO    EnvoyExt: No git repo found for C:\Mine\4- Coding Project\LEDMatrix with TD (stopped at C:\Users\yingl)
-23:12:51      15 INFO    EnvoyExt: Starting Envoy MCP server on port 9870
-23:12:52      15 WARNING EnvoyExt: Could not auto-configure MCP client: <class 'OSError'> returned a result with an exception set
-23:12:52      62 INFO    EmbodyExt: TDN mode=export -- .toe is source of truth, skipping reconstruction
