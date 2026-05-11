@@ -154,7 +154,7 @@ Hardware parameters in `config.py`:
 | Parameter | Default | Notes |
 |-----------|---------|-------|
 | `HARDWARE_MAPPING` | `'adafruit-hat'` | Use this for the Adafruit RGB Matrix Bonnet |
-| `ROW_ADDRESS_TYPE` | `1` | Required for 64-row panels (E address line — solder jumper must be bridged) |
+| `ROW_ADDRESS_TYPE` | `0` | Waveshare P2 64x64 uses type 0 despite HUB75E connector (type 1 only shows 2-3 rows) |
 | `GPIO_SLOWDOWN` | `4` | Pi Zero 2W: use 3–4; Pi 4: use 1–2 |
 | `PWM_BITS` | `11` | Higher = smoother colour gradients, but more CPU load |
 
@@ -163,7 +163,7 @@ Hardware parameters in `config.py`:
 ## Troubleshooting
 
 **`ImportError: No module named 'rgbmatrix'`**
-→ The rpi-rgb-led-matrix library is not installed. See the installation notes in `artnet_matrix.py` in the parent directory.
+→ Install via: `sudo apt-get install -y cmake cython3 && sudo pip3 install --break-system-packages .` (from the rpi-rgb-led-matrix repo root). Requires 1GB swap — see DEVLOG.
 
 **Flickering display / unstable colours**
 → Increase `GPIO_SLOWDOWN` (try 4 or 5).
