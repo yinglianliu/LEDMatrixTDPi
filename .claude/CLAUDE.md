@@ -57,16 +57,17 @@ Key parameters in `artnet_matrix.py`:
 ### Signal flow
 
 ```
-fx_noise        ──┐
-fx_metaball     ──┤  fx_switch → level1 → OUT (64×64)
-fx_audio        ──┤                           │
-fx_text         ──┤              ┌────────────┴────────────┐
-fx_audio_metaball─┘         viz_led (GLSL)           artnet_sender
+fx_noise         ──┐
+fx_metaball      ──┤
+fx_audio         ──┤  fx_switch → level1 → OUT (64×64)
+fx_text          ──┤                           │
+fx_audio_metaball──┤              ┌────────────┴────────────┐
+fx_ice_metaball  ──┘         viz_led (GLSL)           artnet_sender
                              PREVIEW (640×640)        (executeDAT, every frame)
                              LED dot simulation       → ArtNet UDP to Pi
 ```
 
-Switch effects by changing `fx_switch.par.input`: `0`=noise, `1`=metaball, `2`=audio, `3`=text, `4`=audio metaball.
+Switch effects by changing `fx_switch.par.input`: `0`=noise, `1`=metaball, `2`=audio, `3`=text, `4`=audio metaball, `5`=ice metaball.
 
 ### Effects (baseCOMPs)
 
@@ -77,6 +78,7 @@ Switch effects by changing `fx_switch.par.input`: `0`=noise, `1`=metaball, `2`=a
 | `fx_audio` | `audio_in` → `spectrum1` → `audio_viz` → `OUT` | 32-band spectrum analyser (scriptTOP) |
 | `fx_text` | `txt` (textTOP 512×64) → `scroller` (scriptTOP) → `colorize` → `OUT` | Scrolling marquee, right-to-left loop |
 | `fx_audio_metaball` | `amb_trigger` → `amb_viz` → `out1` | Beat-reactive metaball (scriptTOP); reads `fx_audio/spectrum1` |
+| `fx_ice_metaball` | same structure as fx_audio_metaball | Same beat behaviour, fixed single-hue ice-blue palette (no colour changes) |
 
 ### Audio reactive chain (inside `fx_audio`)
 
