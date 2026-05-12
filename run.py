@@ -119,9 +119,8 @@ def run_artnet(matrix):
 
             if universe == N_UNIVERSES - 1:
                 img = Image.frombytes('RGB', (cfg.COLS, cfg.ROWS), bytes(frame_buf))
-                canvas = matrix.CreateFrameCanvas()
                 canvas.SetImage(img)
-                matrix.SwapOnVSync(canvas)
+                canvas = matrix.SwapOnVSync(canvas)
     finally:
         sock.close()
         matrix.Clear()
