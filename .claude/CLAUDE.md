@@ -59,15 +59,16 @@ Key parameters in `artnet_matrix.py`:
 ```
 fx_noise         ──┐
 fx_metaball      ──┤
-fx_audio         ──┤  fx_switch → level1 → OUT (64×64)
-fx_text          ──┤                           │
-fx_audio_metaball──┤              ┌────────────┴────────────┐
-fx_ice_metaball  ──┘         viz_led (GLSL)           artnet_sender
+fx_audio         ──┤
+fx_text          ──┤  fx_switch → level1 → OUT (64×64)
+fx_audio_metaball──┤                           │
+fx_ice_metaball  ──┤              ┌────────────┴────────────┐
+fx_camera        ──┘         viz_led (GLSL)           artnet_sender
                              PREVIEW (640×640)        (executeDAT, every frame)
                              LED dot simulation       → ArtNet UDP to Pi
 ```
 
-Switch effects by changing `fx_switch.par.input`: `0`=noise, `1`=metaball, `2`=audio, `3`=text, `4`=audio metaball, `5`=ice metaball.
+Switch effects by changing `fx_switch.par.input`: `0`=noise, `1`=metaball, `2`=audio, `3`=text, `4`=audio metaball, `5`=ice metaball, `6`=camera scatter.
 
 ### Effects (baseCOMPs)
 
@@ -79,6 +80,7 @@ Switch effects by changing `fx_switch.par.input`: `0`=noise, `1`=metaball, `2`=a
 | `fx_text` | `txt` (textTOP 512×64) → `scroller` (scriptTOP) → `colorize` → `OUT` | Scrolling marquee, right-to-left loop |
 | `fx_audio_metaball` | `amb_trigger` → `amb_viz` → `out1` | Beat-reactive metaball (scriptTOP); reads `fx_audio/spectrum1` |
 | `fx_ice_metaball` | same structure as fx_audio_metaball | Same beat behaviour, fixed single-hue ice-blue palette (no colour changes) |
+| `fx_camera` | `cam_in` → `scatter` (glslTOP 64×64) → `out1` | Webcam feed with beat-reactive pixel scatter + hue rotation. Beat energy read from `fx_audio/spectrum1` via Vectors expression. `scatter.par.outputresolution = 'custom'` required to lock to 64×64. |
 
 ### Audio reactive chain (inside `fx_audio`)
 
