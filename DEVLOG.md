@@ -475,3 +475,51 @@ sudo pip3 install --break-system-packages .
 sudo apt-get install -y cmake cython3
 sudo pip3 install --break-system-packages .   # from repo root
 ```
+
+---
+
+## 2026-05-14 — fx_camera Lag Smoothing + Mirror Fix
+
+---
+
+### [TD] scriptCHOP `onCook` never fires — replaced with executeDAT + constantCHOP + lagCHOP
+
+**Symptom**: A `scriptCHOP` with `CookLevel.ALWAYS` and a `noiseCHOP` cook trigger connected at input 0 never fires `onCook`. The output CHOP stays at 0.
+
+**Cause**: scriptCHOP cook scheduling is not reliable in all contexts. Even with `CookLevel.ALWAYS` and a changing input, `onCook` was never invoked.
+
+**Fix**: Replace the scriptCHOP pipeline entirely with:
+1. `beat_exec` (executeDAT, `frameStart=True`) — fires every frame unconditionally, reads `op('../fx_audio/spectrum1')` bass energy, writes to `beat_const.par.value0`
+2. `beat_const` (constantCHOP, channel name = "beat") — holds the current raw bass value
+3. `beat_lag` (lagCHOP, `lag1=0.15s`, `lag2=1.2s`) — smooths: quick attack, slow decay
+
+`scatter.par.vec0valuex` expression: `op('beat_lag')['beat']`
+
+**Lesson**: For every-frame CHOP value updates, `executeDAT` + `constantCHOP` is more reliable than scriptCHOP. executeDAT `onFrameStart` is part of TD's guaranteed frame scheduling.
+
+**Note on paths from executeDAT**: `op()` inside an executeDAT resolves relative to the DAT's parent COMP. From `fx_camera/beat_exec`:
+- `op('beat_const')` → sibling inside fx_camera ✓
+- `op('../fx_audio/spectrum1')` → up to led_matrix, then into fx_audio ✓
+
+---
+
+### [TD] Camera image is horizontally mirrored
+
+**Symptom**: The webcam image in `fx_camera` shows a mirror image of the subject (like a mirror, not a window).
+
+**Fix**: Flip the U coordinate in the GLSL shader (`scatter_glsl`):
+```glsl
+vec2 uv = vec2(1.0 - vUV.s, vUV.t);  // horizontal mirror
+```
+This flips before scatter displacement so the scatter direction is also correct.
+
+---
+
+### [Tuning] Camera scatter smoothing parameters
+
+| Parameter | Value | Effect |
+|-----------|-------|--------|
+| `beat_lag.lag1` | 0.15s | Rise time: scatter snaps out over ~0.15s on a beat |
+| `beat_lag.lag2` | 1.2s | Fall time: scatter drifts back over ~1.2s after a beat |
+
+Tune `lag1` up (e.g. 0.25s) for a gentler attack; tune `lag2` up (e.g. 1.5–2.0s) for longer trails.

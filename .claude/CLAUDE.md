@@ -80,7 +80,7 @@ Switch effects by changing `fx_switch.par.input`: `0`=noise, `1`=metaball, `2`=a
 | `fx_text` | `txt` (textTOP 512×64) → `scroller` (scriptTOP) → `colorize` → `OUT` | Scrolling marquee, right-to-left loop |
 | `fx_audio_metaball` | `amb_trigger` → `amb_viz` → `out1` | Beat-reactive metaball (scriptTOP); reads `fx_audio/spectrum1` |
 | `fx_ice_metaball` | same structure as fx_audio_metaball | Same beat behaviour, fixed single-hue ice-blue palette (no colour changes) |
-| `fx_camera` | `cam_in` → `scatter` (glslTOP 64×64) → `out1` | Webcam feed with beat-reactive pixel scatter + hue rotation. Beat energy read from `fx_audio/spectrum1` via Vectors expression. `scatter.par.outputresolution = 'custom'` required to lock to 64×64. |
+| `fx_camera` | `cam_in` → `scatter` (glslTOP 64×64) → `out1` | Webcam feed with horizontally-mirrored output, beat-reactive pixel scatter + hue rotation. Smoothed beat energy via `beat_exec` → `beat_const` → `beat_lag` → `scatter.vec0valuex`. `scatter.par.outputresolution = 'custom'` required to lock to 64×64. |
 
 ### Audio reactive chain (inside `fx_audio`)
 
@@ -121,6 +121,24 @@ text_trigger (1×1 noiseTOP) → scroller  ← forces every-frame cooking
 - Scroll speed: `SPEED` in `scroller_callbacks` (pixels/frame; 0.5 = 30 px/s).
 - Loop timing: auto-detected from actual text pixel extent — no manual adjustment needed.
 - Color animation: `colorize.par.hueoffset.expr = 'absTime.seconds * 40 % 360'` — text must be a saturated color (e.g. pure red), not white (white has no saturation, hue rotation has no effect).
+
+### Camera scatter chain (inside `fx_camera`)
+
+```
+cam_in (videodeviceinTOP) → scatter (glslTOP 64×64) → out1
+                                ↑
+             beat_exec (executeDAT, frameStart)
+                 → reads fx_audio/spectrum1 bass energy
+                 → writes beat_const.par.value0
+
+beat_const (constantCHOP, channel="beat") → beat_lag (lagCHOP) → scatter.vec0valuex
+```
+
+- `beat_exec` fires `onFrameStart` every frame — more reliable than scriptCHOP for every-frame execution.
+- Path to spectrum from executeDAT (inside fx_camera): `op('../fx_audio/spectrum1')`.
+- `beat_lag.lag1 = 0.15s` (rise), `beat_lag.lag2 = 1.2s` (fall) — quick attack, slow decay.
+- GLSL shader (`scatter_glsl`): mirrors input horizontally (`uv.x = 1.0 - vUV.s`), scatters UV outward from center by `beat * 0.7`, applies hue rotation.
+- `scatter.par.outputresolution = 'custom'` required — otherwise output follows camera resolution (1920×1080).
 
 ### LED preview
 
@@ -239,3 +257,12 @@ Audio source: reuses `fx_audio/spectrum1` — no separate `audiodeviceinCHOP` (t
 | `COLOR_LERP` | 0.04 | Colour crossfade speed; beat triggers a gradual shift, not an instant cut |
 | `COLOR_AUTO_SEC` | 6.0 | Seconds without a colour change before an automatic palette switch |
 | `hue_spread` | 0.12 | Width of the colour family on each beat (in `_random_colors`); 0 = identical, 0.25 = quarter colour wheel |
+
+### Camera scatter (`fx_camera/beat_lag`, `fx_camera/beat_exec`)
+
+| Parameter | Location | Default | Effect |
+|-----------|----------|---------|--------|
+| `beat_lag.lag1` | lagCHOP | 0.15s | Rise time — how fast scatter snaps out on a beat |
+| `beat_lag.lag2` | lagCHOP | 1.2s | Fall time — how slowly scatter returns to rest after a beat |
+| `bass / 0.08` | `beat_exec` onFrameStart | 0.08 | Bass sensitivity divisor; lower = more sensitive (easier to reach 1.0) |
+| `beat * 0.7` | `scatter_glsl` GLSL | 0.7 | Maximum scatter distance at peak beat; lower = subtler displacement |
