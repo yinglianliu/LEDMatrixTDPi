@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LED Matrix — Embed</title>
+<base target="_parent" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#070708;
+    --bg-2:#0d0d10;
+    --ink:#e9e7e2;
+    --ink-dim:#8e8a82;
+    --ink-faint:#4a4842;
+    --rule:#1c1c20;
+    --rule-2:#26262b;
+    --led:#ff7a3a;       /* warm LED orange */
+    --led-2:#ffb070;
+    --ice:#7ad7ff;       /* secondary cool */
+    --acid:#c8ff5a;      /* tertiary */
+    --font-display:"Instrument Serif", "Times New Roman", serif;
+    --font-sans:"Space Grotesk", system-ui, sans-serif;
+    --font-mono:"JetBrains Mono", ui-monospace, monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-feature-settings:"ss01","ss02","cv11";-webkit-font-smoothing:antialiased}
+  body{
+    background:
+      radial-gradient(ellipse 80% 40% at 50% 0%, rgba(255,122,58,.10), transparent 60%),
+      radial-gradient(ellipse 60% 30% at 100% 100%, rgba(122,215,255,.05), transparent 60%),
+      var(--bg);
+    overflow-x:hidden;
+    border-radius:6px;
+    overflow:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  /* dot-grid texture overlay */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
+    background-image:radial-gradient(rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:4px 4px;
+    mask-image:linear-gradient(to bottom, transparent, black 200px, black calc(100% - 200px), transparent);
+  }
+
+  /* ───── chrome ───── */
+  .embed-tag{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 36px 0;
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-dim);
+  }
+  .embed-tag .brand{display:flex;align-items:center;gap:10px;color:var(--ink)}
+  .embed-tag .brand-dot{width:8px;height:8px;background:var(--led);border-radius:1px;box-shadow:0 0 12px var(--led),0 0 4px #fff inset}
+  .embed-tag .meta{display:flex;gap:24px}
+
+  /* ───── hero ───── */
+  .hero{
+    position:relative;
+    padding:80px 36px 60px;
+    display:grid;
+    grid-template-columns: 1.2fr .9fr;
+    gap:60px;
+    align-items:end;
+    border-bottom:1px solid var(--rule);
+  }
+  .hero-left h1{
+    font-family:var(--font-display);
+    font-weight:400;
+    font-size:clamp(64px, 10vw, 156px);
+    line-height:.92;
+    letter-spacing:-.02em;
+    margin:0 0 24px;
+    color:var(--ink);
+  }
+  .hero-left h1 .glow{
+    background:linear-gradient(180deg,#fff 0%, var(--led-2) 40%, var(--led) 80%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 18px rgba(255,122,58,.35));
+    font-style:italic;
+  }
+  .hero-left .kicker{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--led);margin-bottom:32px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .hero-left .kicker::before{content:"";width:24px;height:1px;background:var(--led);display:inline-block}
+  .hero-left .lede{
+    font-size:19px;line-height:1.5;color:var(--ink-dim);max-width:540px;
+    text-wrap:pretty;
+  }
+  .hero-left .lede em{color:var(--ink);font-style:normal;font-weight:500}
+  .hero-meta{
+    margin-top:48px;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:32px;
+    font-family:var(--font-mono);
+    border-top:1px solid var(--rule);padding-top:24px;
+    max-width:640px;
+  }
+  .hero-meta dt{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 8px}
+  .hero-meta dd{font-size:13px;color:var(--ink);margin:0;line-height:1.4}
+
+  .hero-right{
+    position:relative;
+    aspect-ratio:1/1;
+    background:#000;
+    border:1px solid var(--rule-2);
+    border-radius:6px;
+    overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 80px rgba(255,122,58,.08);
+  }
+  #ledCanvas{width:100%;height:100%;display:block;image-rendering:pixelated}
+  .hero-right .label{
+    position:absolute;top:12px;left:12px;z-index:2;
+    font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-dim);
+    background:rgba(7,7,8,.65);backdrop-filter:blur(6px);
+    padding:6px 10px;border-radius:3px;border:1px solid var(--rule-2);
+  }
+  .hero-right .label .live{display:inline-block;width:6px;height:6px;background:var(--led);border-radius:50%;margin-right:8px;animation:pulse 1.4s infinite;box-shadow:0 0 8px var(--led);vertical-align:middle}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .hero-right .corner{
+    position:absolute;bottom:12px;right:12px;z-index:2;
+    font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;color:var(--ink-faint);
+  }
+
+  /* ───── section frame ───── */
+  section{position:relative;padding:100px 36px;border-bottom:1px solid var(--rule)}
+  section:last-of-type{border-bottom:none}
+  .sec-num{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;color:var(--ink-faint);
+    text-transform:uppercase;margin-bottom:8px;
+  }
+  .sec-num .dash{color:var(--led)}
+  h2{
+    font-family:var(--font-display);font-weight:400;font-style:italic;
+    font-size:clamp(38px,5vw,64px);line-height:1;letter-spacing:-.01em;margin:0 0 48px;
+    color:var(--ink);
+  }
+  h2 .accent{color:var(--led)}
+  h3{font-family:var(--font-sans);font-weight:500;font-size:15px;letter-spacing:.02em;margin:0 0 12px;color:var(--ink)}
+
+  /* ───── about ───── */
+  .about{
+    display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:start;
+    max-width:1280px;margin:0 auto;
+  }
+  .about p{font-size:18px;line-height:1.6;color:var(--ink-dim);margin:0 0 20px;text-wrap:pretty}
+  .about p strong{color:var(--ink);font-weight:500}
+  .about p:last-child{margin-bottom:0}
+  .about .stack{
+    display:flex;flex-direction:column;gap:16px;
+    padding:20px;border:1px solid var(--rule);border-radius:4px;
+    background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+  }
+  .about .stack-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;font-family:var(--font-mono);font-size:12px;padding-bottom:14px;border-bottom:1px dashed var(--rule-2)}
+  .about .stack-row:last-child{border:none;padding-bottom:0}
+  .about .stack-row .k{color:var(--ink-faint);letter-spacing:.1em;text-transform:uppercase;font-size:10px}
+  .about .stack-row .v{color:var(--ink);text-align:right}
+  .about .stack h3{margin-bottom:4px}
+  .about .stack .sub{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--led);margin-bottom:18px}
+
+  /* ───── video block ───── */
+  .video-section{padding:120px 36px;border-bottom:1px solid var(--rule)}
+  .video-wrap{
+    position:relative;
+    max-width:1280px;margin:0 auto;
+    aspect-ratio:16/10;
+    background:#000;
+    border:1px solid var(--rule-2);
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 50px 120px rgba(0,0,0,.7), 0 0 100px rgba(255,122,58,.06);
+  }
+  .video-wrap video{width:100%;height:100%;object-fit:cover;display:block}
+  .video-placeholder{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(255,122,58,.08), transparent 60%),
+      #050507;
+  }
+  .video-placeholder .frame-grid{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:40px 40px;
+    mask-image:radial-gradient(ellipse at center, black, transparent 80%);
+  }
+  .video-placeholder .play{
+    width:88px;height:88px;border-radius:50%;
+    border:1px solid var(--rule-2);
+    background:rgba(255,255,255,.02);backdrop-filter:blur(8px);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;z-index:1;
+    transition:transform .3s ease, border-color .3s ease;
+  }
+  .video-placeholder .play:hover{transform:scale(1.05);border-color:var(--led)}
+  .video-placeholder .play::after{
+    content:"";display:block;
+    border-left:18px solid var(--led);
+    border-top:11px solid transparent;border-bottom:11px solid transparent;
+    margin-left:6px;
+    filter:drop-shadow(0 0 8px var(--led));
+  }
+  .video-placeholder .caption{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-faint);
+    text-align:center;line-height:1.8;z-index:1;
+  }
+  .video-placeholder .caption strong{color:var(--ink-dim);font-weight:400;display:block}
+  .video-meta{
+    max-width:1280px;margin:24px auto 0;
+    display:flex;justify-content:space-between;
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);
+  }
+  .video-meta .right{color:var(--ink-dim)}
+
+  /* ───── effects gallery ───── */
+  .gallery{max-width:1400px;margin:0 auto}
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+    border-radius:6px;overflow:hidden;
+  }
+  .fx{
+    background:var(--bg-2);
+    padding:24px;
+    aspect-ratio:1/1.1;
+    display:flex;flex-direction:column;justify-content:space-between;
+    position:relative;
+    cursor:default;
+    transition:background .3s ease;
+  }
+  .fx:hover{background:#101015}
+  .fx-num{
+    font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;color:var(--ink-faint);
+  }
+  .fx-canvas{
+    flex:1;margin:18px -8px;
+    background:#000;border-radius:3px;
+    position:relative;overflow:hidden;
+    box-shadow:inset 0 0 30px rgba(0,0,0,.5);
+  }
+  .fx canvas{width:100%;height:100%;display:block;image-rendering:pixelated}
+  .fx-label{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;color:var(--ink);
+  }
+  .fx-label small{display:block;color:var(--ink-faint);font-size:10px;margin-top:4px;letter-spacing:.04em;text-transform:none}
+
+  /* ───── architecture ───── */
+  .arch{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+  .arch-diagram{
+    font-family:var(--font-mono);font-size:12px;line-height:1.7;
+    background:#0a0a0d;border:1px solid var(--rule-2);border-radius:6px;
+    padding:32px;
+    color:var(--ink-dim);
+    white-space:pre;overflow-x:auto;
+    box-shadow:inset 0 0 40px rgba(0,0,0,.4);
+  }
+  .arch-diagram .hl{color:var(--led)}
+  .arch-diagram .hl2{color:var(--ice)}
+  .arch-diagram .com{color:var(--ink-faint);font-style:italic}
+  .arch p{font-size:17px;line-height:1.6;color:var(--ink-dim);text-wrap:pretty;margin:0 0 24px}
+  .arch ul{list-style:none;padding:0;margin:32px 0 0;display:flex;flex-direction:column;gap:14px}
+  .arch li{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:baseline;padding-bottom:14px;border-bottom:1px dashed var(--rule-2);font-family:var(--font-mono);font-size:12px}
+  .arch li:last-child{border:none;padding-bottom:0}
+  .arch li .k{color:var(--led);font-size:10px;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap}
+  .arch li .v{color:var(--ink)}
+
+  /* ───── hardware grid ───── */
+  .hw{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  .hw-card{
+    border:1px solid var(--rule);
+    background:linear-gradient(180deg,rgba(255,255,255,.015),transparent);
+    border-radius:6px;
+    padding:28px 24px;
+    min-height:200px;
+    display:flex;flex-direction:column;justify-content:space-between;gap:24px;
+  }
+  .hw-card .ic{
+    width:36px;height:36px;
+    color:var(--led);
+  }
+  .hw-card .ic svg{width:100%;height:100%}
+  .hw-card h3{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;font-weight:400}
+  .hw-card .name{font-family:var(--font-sans);font-size:18px;font-weight:500;color:var(--ink);line-height:1.3;margin:0 0 6px}
+  .hw-card .spec{font-family:var(--font-mono);font-size:11px;color:var(--ink-dim);line-height:1.6}
+
+  /* ───── findings ───── */
+  .findings{max-width:1280px;margin:0 auto}
+  .findings-intro{font-size:18px;color:var(--ink-dim);max-width:640px;margin-bottom:48px;line-height:1.6;text-wrap:pretty}
+  .find-list{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+  .find{background:var(--bg-2);padding:32px;display:flex;flex-direction:column;gap:14px}
+  .find .tag{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--led)}
+  .find h4{font-family:var(--font-sans);font-size:18px;font-weight:500;margin:0;line-height:1.35;color:var(--ink);text-wrap:balance}
+  .find p{font-family:var(--font-mono);font-size:12px;line-height:1.6;color:var(--ink-dim);margin:0}
+  .find p code{color:var(--ice);background:#0f1419;padding:1px 5px;border-radius:2px;font-size:11px}
+
+  /* ───── footer ───── */
+  footer{
+    padding:80px 36px 36px;
+    display:flex;justify-content:space-between;align-items:flex-end;gap:40px;
+    border-top:1px solid var(--rule);
+  }
+  footer .big{
+    font-family:var(--font-display);font-style:italic;font-size:clamp(40px,6vw,84px);line-height:.95;margin:0;letter-spacing:-.01em;
+  }
+  footer .big .accent{
+    background:linear-gradient(180deg,#fff,var(--led));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  footer .right{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);text-align:right;line-height:2}
+  footer .right .c{color:var(--ink-dim)}
+
+  /* responsive */
+  @media (max-width: 980px){
+    .embed-tag{padding:16px 20px 0;font-size:10px}
+    .embed-tag .meta{display:none}
+    .hero{grid-template-columns:1fr;padding:40px 20px 40px;gap:40px}
+    .hero-right{order:-1;max-width:480px}
+    .hero-meta{grid-template-columns:repeat(2,1fr)}
+    section, .video-section{padding:80px 20px}
+    .about{grid-template-columns:1fr;gap:40px}
+    .gallery-grid{grid-template-columns:repeat(2,1fr)}
+    .arch{grid-template-columns:1fr;gap:40px}
+    .hw{grid-template-columns:repeat(2,1fr)}
+    .find-list{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="embed-tag">
+  <div class="brand"><span class="brand-dot"></span> LED MATRIX / 64×64</div>
+  <div class="meta">
+    <span>2026</span>
+    <span>TouchDesigner · Raspberry Pi · ArtNet</span>
+  </div>
+</div>
+
+<!-- ───────── HERO ───────── -->
+<header class="hero">
+  <div class="hero-left">
+    <div class="kicker">Real-time visual hardware · 4 096 pixels</div>
+    <h1>Glowing<br/><span class="glow">matrix.</span></h1>
+    <p class="lede">
+      A <em>64×64 HUB75E LED panel</em> driven by a Raspberry Pi Zero 2W, streaming
+      real-time GLSL effects from TouchDesigner over ArtNet. Seven hand-tuned visualisers — noise,
+      metaballs, beat-reactive spectra, scrolling text and webcam scatter — render at 60 fps on 4 096 physical pixels.
+    </p>
+    <dl class="hero-meta">
+      <div><dt>Resolution</dt><dd>64 × 64 px</dd></div>
+      <div><dt>Effects</dt><dd>7 live shaders</dd></div>
+      <div><dt>Transport</dt><dd>ArtNet · 24 universes</dd></div>
+      <div><dt>Frame rate</dt><dd>60 fps · 12 288 B/frame</dd></div>
+    </dl>
+  </div>
+  <div class="hero-right">
+    <div class="label"><span class="live"></span>LIVE PREVIEW · GLSL</div>
+    <canvas id="ledCanvas" width="64" height="64"></canvas>
+    <div class="corner">64 × 64 · HUB75E</div>
+  </div>
+</header>
+
+<!-- ───────── ABOUT ───────── -->
+<section>
+  <div class="sec-num">01 <span class="dash">—</span> About the project</div>
+  <h2>A small piece of <span class="accent">light hardware</span>,<br/>driven like an instrument.</h2>
+  <div class="about">
+    <div>
+      <p>
+        <strong>LED Matrix</strong> is a research build that turns a Waveshare P2 64×64 panel into a
+        playable visual instrument. TouchDesigner generates frames on a laptop; a Raspberry Pi Zero 2W
+        receives them over ArtNet UDP and pushes them straight to the Adafruit RGB Matrix Bonnet at line rate.
+      </p>
+      <p>
+        The project explores how far a tiny SBC can be pushed when paired with a desktop visual engine —
+        and how to design effects whose grammar is legible at 64×64.
+        Every visual is built twice: once as a GLSL/Python pipeline in TD, and once as a standalone
+        Python runner so the Pi can perform without a host.
+      </p>
+    </div>
+    <div class="stack">
+      <div class="sub">Tech stack</div>
+      <h3>Hardware · Software</h3>
+      <div class="stack-row"><span class="k">Panel</span><span class="v">Waveshare P2 · HUB75E · 1/32 scan</span></div>
+      <div class="stack-row"><span class="k">Driver</span><span class="v">Adafruit RGB Matrix Bonnet</span></div>
+      <div class="stack-row"><span class="k">SBC</span><span class="v">Raspberry Pi Zero 2W</span></div>
+      <div class="stack-row"><span class="k">Host</span><span class="v">TouchDesigner 2023 · Windows</span></div>
+      <div class="stack-row"><span class="k">Transport</span><span class="v">ArtNet · UDP · 24 universes × 512 B</span></div>
+      <div class="stack-row"><span class="k">Library</span><span class="v">hzeller / rpi-rgb-led-matrix</span></div>
+      <div class="stack-row"><span class="k">Audio</span><span class="v">VB-Audio loopback · 32-band FFT</span></div>
+      <div class="stack-row"><span class="k">Power</span><span class="v">5 V · 5 A regulated</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── VIDEO ───────── -->
+<section class="video-section">
+  <div class="sec-num">02 <span class="dash">—</span> Documentation</div>
+  <h2>In motion.</h2>
+  <div class="video-wrap">
+    <iframe
+      src="https://player.vimeo.com/video/1191703887?title=0&byline=0&portrait=0&color=ff7a3a"
+      allow="autoplay; fullscreen; picture-in-picture"
+      allowfullscreen
+      title="LED Matrix — full performance"
+      style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
+  </div>
+  <div class="video-meta">
+    <span>SOURCE — VIMEO · FULL PERFORMANCE</span>
+    <span class="right">CAPTURED FROM PANEL · NO POST</span>
+  </div>
+</section>
+
+<!-- ───────── EFFECTS GALLERY ───────── -->
+<section>
+  <div class="sec-num">03 <span class="dash">—</span> The effects</div>
+  <h2>Seven visualisers,<br/>each <span class="accent">a different grammar</span>.</h2>
+  <div class="gallery">
+    <div class="gallery-grid" id="fxGrid">
+      <!-- populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ───────── ARCHITECTURE ───────── -->
+<section>
+  <div class="sec-num">04 <span class="dash">—</span> Signal flow</div>
+  <h2>From <span class="accent">node graph</span><br/>to physical photon.</h2>
+  <div class="arch">
+    <div>
+      <p>
+        Each frame is a 12 288-byte payload — 64 × 64 × 3 bytes of RGB — chopped into 24
+        sequentially-numbered ArtNet universes and unicast to the Pi. On the receiving end,
+        a single Python process reassembles universes, writes into the rpi-rgb-led-matrix offscreen canvas,
+        and swaps it on vsync.
+      </p>
+      <p>
+        Latency from a slider move in TouchDesigner to a pixel changing on the wall is one frame at 60 Hz,
+        plus one Ethernet hop — measured at ≈ 22 ms end to end.
+      </p>
+      <ul>
+        <li><span class="k">01 ›</span><span class="v">fx_switch picks one of seven baseCOMP visuals</span></li>
+        <li><span class="k">02 ›</span><span class="v">level1 colour-grades; OUT caps at 64×64</span></li>
+        <li><span class="k">03 ›</span><span class="v">artnet_sender DAT packs 24 universes per frame</span></li>
+        <li><span class="k">04 ›</span><span class="v">Pi reassembles → rgbmatrix → vsync swap</span></li>
+        <li><span class="k">05 ›</span><span class="v">viz_led GLSL TOP renders a 640×640 LED dot preview</span></li>
+      </ul>
+    </div>
+<pre class="arch-diagram">
+<span class="com">// TouchDesigner — Windows host</span>
+<span class="hl">fx_switch</span> ─▶ level1 ─▶ OUT (64×64)
+                         │
+              ┌──────────┴───────────┐
+              ▼                      ▼
+       viz_led (GLSL)        <span class="hl">artnet_sender</span>
+       640×640 preview         executeDAT
+                                    │
+                                    ▼ UDP
+                            <span class="hl2">┌────────────┐</span>
+                            <span class="hl2">│ 24 univ.   │</span>
+                            <span class="hl2">│ 512 B each │</span>
+                            <span class="hl2">└─────┬──────┘</span>
+                                  ▼
+<span class="com">// Raspberry Pi Zero 2W</span>
+<span class="hl">artnet_matrix.py</span> ─▶ rgbmatrix ─▶ <span class="hl">LED Panel</span>
+                                    64×64 physical
+</pre>
+  </div>
+</section>
+
+<!-- ───────── HARDWARE ───────── -->
+<section>
+  <div class="sec-num">05 <span class="dash">—</span> Bill of materials</div>
+  <h2>Four boards.<br/>One <span class="accent">solder bridge</span>.</h2>
+  <div class="hw">
+    <div class="hw-card">
+      <div class="ic"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="30" height="30" rx="1"/><g><circle cx="9" cy="9" r="1.3" fill="currentColor"/><circle cx="18" cy="9" r="1.3" fill="currentColor"/><circle cx="27" cy="9" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="18" cy="18" r="1.3" fill="currentColor"/><circle cx="27" cy="18" r="1.3" fill="currentColor"/><circle cx="9" cy="27" r="1.3" fill="currentColor"/><circle cx="18" cy="27" r="1.3" fill="currentColor"/><circle cx="27" cy="27" r="1.3" fill="currentColor"/></g></svg></div>
+      <div>
+        <h3>The panel</h3>
+        <div class="name">Waveshare RGB-Matrix-P2</div>
+        <div class="spec">64 × 64 · HUB75E<br/>2 mm pitch · 1/32 scan<br/>~3 A peak draw</div>
+      </div>
+    </div>
+    <div class="hw-card">
+      <div class="ic"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="9" width="24" height="18" rx="1"/><path d="M3 13h3M3 17h3M3 21h3M3 25h3M30 13h3M30 17h3M30 21h3M30 25h3"/><rect x="13" y="14" width="10" height="8" fill="currentColor" opacity=".3"/></svg></div>
+      <div>
+        <h3>Driver</h3>
+        <div class="name">Adafruit RGB Bonnet</div>
+        <div class="spec">HUB75 level shifter<br/>Address jumper 16/E/8<br/>Mid → 8 (required)</div>
+      </div>
+    </div>
+    <div class="hw-card">
+      <div class="ic"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="8" width="26" height="20" rx="1"/><rect x="11" y="13" width="14" height="10" stroke-width="1" opacity=".5"/><circle cx="8" cy="11" r=".8" fill="currentColor"/><circle cx="8" cy="14" r=".8" fill="currentColor"/><circle cx="8" cy="17" r=".8" fill="currentColor"/></svg></div>
+      <div>
+        <h3>Compute</h3>
+        <div class="name">Raspberry Pi Zero 2W</div>
+        <div class="spec">4-core ARM Cortex-A53<br/>512 MB RAM<br/>GPIO slowdown = 4</div>
+      </div>
+    </div>
+    <div class="hw-card">
+      <div class="ic"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6 L18 18 L9 18 L18 30" stroke-linejoin="round"/><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="18" cy="30" r="1.5" fill="currentColor"/><path d="M22 12 H30 M22 18 H30 M22 24 H30" opacity=".6"/></svg></div>
+      <div>
+        <h3>Power</h3>
+        <div class="name">5 V · 5 A regulated</div>
+        <div class="spec">Panel ≤ 3 A<br/>Pi ≤ 1 A<br/>headroom for spikes</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── FINDINGS ───────── -->
+<section>
+  <div class="sec-num">06 <span class="dash">—</span> Findings from the dev log</div>
+  <h2>Things that <span class="accent">silently broke</span><br/>before they worked.</h2>
+  <div class="findings">
+    <p class="findings-intro">A condensed selection from the dev log — the kind of behaviour you only learn
+      about by staring at a black panel for an hour at 2 AM.</p>
+    <div class="find-list">
+      <div class="find">
+        <span class="tag">TouchDesigner</span>
+        <h4>scriptTOP output is frozen — never updates.</h4>
+        <p>With no wired TOP input, TD assumes inputs are unchanged and skips re-cooking. Fix: feed a <code>noiseTOP</code> with <code>tz = absTime.seconds</code> into input 0 to force a cook every frame.</p>
+      </div>
+      <div class="find">
+        <span class="tag">FFT</span>
+        <h4>audiospectrum frequency indexing was completely wrong.</h4>
+        <p>With <code>frequencylog = 1.0</code>, samples are log-distributed — what we labelled "60 Hz" actually queried ~20 Hz. Switch to linear; <code>idx = int(freq_hz)</code> works directly.</p>
+      </div>
+      <div class="find">
+        <span class="tag">Numpy</span>
+        <h4>scriptTOP Y-axis is inverted on write.</h4>
+        <p>copyNumpyArray uses OpenGL convention: <code>arr[0]</code> = bottom. Bars filling <code>arr[H-bar_px:H]</code> grow downward. Fill <code>arr[0:bar_px]</code> instead.</p>
+      </div>
+      <div class="find">
+        <span class="tag">DSP</span>
+        <h4>Bars stuck at 100% — hard clipping kills dynamics.</h4>
+        <p>Replaced <code>min(1.0, raw*gain)</code> with arctan soft-compression. Loud signals approach the ceiling without collapsing onto it.</p>
+      </div>
+      <div class="find">
+        <span class="tag">Hardware</span>
+        <h4>Display showed two half-height repeats.</h4>
+        <p>HUB75<em>E</em> panels need the 5th address line. Bridged the Bonnet's <code>16/E/8</code> jumper — middle pad to <code>8</code> — and the second half snapped into place.</p>
+      </div>
+      <div class="find">
+        <span class="tag">Pi Zero</span>
+        <h4>LED flicker during animation.</h4>
+        <p>BCM2835 PWM conflict with rpi-rgb-led-matrix's hardware pulse train. Disabled in <code>/boot/firmware/config.txt</code>: <code>dtoverlay=vc4-kms-v3d,noaudio</code>. Steady from then on.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- footer removed for embed; Squarespace page footer takes over -->
+
+<script>
+// ─────────────────────────────────────────────────────────────
+//  Auto-resize: tell parent (Squarespace) our height so the
+//  iframe can grow with content. Squarespace embeds need a
+//  small companion snippet (see README) to actually apply this.
+// ─────────────────────────────────────────────────────────────
+(function(){
+  function postHeight(){
+    const h = document.documentElement.scrollHeight;
+    try { parent.postMessage({type:'led-matrix-embed-height', height:h}, '*'); } catch(e){}
+  }
+  window.addEventListener('load', postHeight);
+  window.addEventListener('resize', postHeight);
+  new ResizeObserver(postHeight).observe(document.body);
+})();
+
+// ─────────────────────────────────────────────────────────────
+//  HERO PREVIEW — 64×64 animated metaball-with-noise composite.
+//  Renders to a 64-pixel offscreen buffer then scales up
+//  with pixelated rendering so individual LEDs are visible.
+// ─────────────────────────────────────────────────────────────
+(function(){
+  const c = document.getElementById('ledCanvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  const W = 64, H = 64;
+  c.width = W; c.height = H;
+  const img = ctx.createImageData(W,H);
+
+  const balls = [
+    {x:18,y:18,r:11,sx:.014,sy:.011,px:0,py:0},
+    {x:42,y:36,r:13,sx:-.012,sy:.016,px:1.2,py:.3},
+    {x:32,y:50,r:10,sx:.018,sy:-.013,px:2.1,py:1.7},
+    {x:50,y:14,r:9, sx:-.016,sy:-.010,px:.7,py:2.4},
+    {x:12,y:48,r:10,sx:.010,sy:.014,px:3.0,py:.9}
+  ];
+
+  function frame(t){
+    t *= .001;
+    // recompute ball positions
+    for (const b of balls){
+      b.x = 32 + Math.cos(t*b.sx*60 + b.px)*22;
+      b.y = 32 + Math.sin(t*b.sy*60 + b.py)*22;
+    }
+
+    let p = 0;
+    for (let y=0; y<H; y++){
+      for (let x=0; x<W; x++){
+        // metaball field
+        let f = 0;
+        for (const b of balls){
+          const dx = x - b.x, dy = y - b.y;
+          f += (b.r*b.r) / (dx*dx + dy*dy + .5);
+        }
+        // threshold + soft glow
+        const v = Math.min(1, Math.max(0, (f-.9)*1.1));
+        // hue rotates with time
+        const hue = (t*30 + (x+y)*1.4) % 360;
+        const [r,g,bl] = hsl2rgb(hue, .75, v*.55);
+        // subtle noise
+        const n = (Math.sin(x*1.7 + y*2.3 + t*4)*.5 + .5) * 10 * v;
+        img.data[p  ] = Math.min(255, r + n);
+        img.data[p+1] = Math.min(255, g + n);
+        img.data[p+2] = Math.min(255, bl + n);
+        img.data[p+3] = 255;
+        p += 4;
+      }
+    }
+    ctx.putImageData(img,0,0);
+
+    // up-scale with glow for the visible canvas
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  function hsl2rgb(h,s,l){
+    h/=360;
+    const a = s * Math.min(l,1-l);
+    const f = n => {
+      const k = (n + h*12) % 12;
+      const c = l - a * Math.max(-1, Math.min(k-3, 9-k, 1));
+      return Math.round(255*c);
+    };
+    return [f(0), f(8), f(4)];
+  }
+})();
+
+// ─────────────────────────────────────────────────────────────
+//  EFFECTS GALLERY — 7 mini canvases, each running its own
+//  shader-ish CPU loop at low res. Cheap but readable.
+// ─────────────────────────────────────────────────────────────
+(function(){
+  const fxList = [
+    {id:0, name:'fx_noise',           label:'Organic noise · hue cycle'},
+    {id:1, name:'fx_metaball',        label:'5-ball liquid GLSL'},
+    {id:2, name:'fx_audio',           label:'32-band spectrum analyser'},
+    {id:3, name:'fx_text',            label:'Rainbow scrolling marquee'},
+    {id:4, name:'fx_audio_metaball',  label:'Beat-reactive blobs · jump'},
+    {id:5, name:'fx_ice_metaball',    label:'Ice palette · locked'},
+    {id:6, name:'fx_camera',          label:'Webcam scatter · hue rot'},
+  ];
+  const grid = document.getElementById('fxGrid');
+  fxList.forEach(fx => {
+    const el = document.createElement('div');
+    el.className = 'fx';
+    el.innerHTML = `
+      <div class="fx-num">FX/${String(fx.id).padStart(2,'0')}</div>
+      <div class="fx-canvas"><canvas data-fx="${fx.id}" width="32" height="32"></canvas></div>
+      <div class="fx-label">${fx.name}<small>${fx.label}</small></div>
+    `;
+    grid.appendChild(el);
+  });
+
+  // animate each
+  const canvases = grid.querySelectorAll('canvas');
+  canvases.forEach(c => {
+    const id = +c.dataset.fx;
+    const W = 32, H = 32;
+    const ctx = c.getContext('2d');
+    const img = ctx.createImageData(W,H);
+    // unique RNG seed offset per fx
+    const seed = id * 100;
+
+    function tick(t){
+      t = t*.001 + seed;
+      let p = 0;
+      for (let y=0;y<H;y++){
+        for (let x=0;x<W;x++){
+          let r=0,g=0,b=0;
+          switch(id){
+            case 0: { // noise + hue
+              const v = (Math.sin(x*.4+t)+Math.cos(y*.5+t*1.3)+Math.sin((x+y)*.3+t*.7))/3;
+              const hue = (t*40 + v*120 + 200) % 360;
+              [r,g,b] = hsl2rgb(hue,.7,.45 + v*.2);
+              break;
+            }
+            case 1: { // metaball
+              let f=0;
+              const balls=[[16+Math.cos(t)*8, 16+Math.sin(t*.8)*8, 6],
+                           [12+Math.sin(t*1.2)*7, 20+Math.cos(t)*7, 5],
+                           [22+Math.cos(t*.7+1)*6, 14+Math.sin(t*1.1)*6, 5]];
+              for (const [bx,by,br] of balls){const dx=x-bx,dy=y-by;f+=(br*br)/(dx*dx+dy*dy+.5)}
+              const v=Math.max(0,Math.min(1,(f-.95)*1.2));
+              [r,g,b]=hsl2rgb((t*60+v*60)%360,.8,v*.55); break;
+            }
+            case 2: { // audio bars (fake)
+              const bar = Math.floor(x/2);
+              const h = Math.abs(Math.sin(bar*1.3 + t*3))*.7 + Math.abs(Math.sin(bar*.7 + t*5))*.3;
+              const fill = (H-y) <= h*H;
+              if (fill){
+                const hue = (bar*12 + t*30) % 360;
+                [r,g,b] = hsl2rgb(hue,.85,.5);
+                if ((H-y) >= h*H - 1) [r,g,b]=[255,255,255];
+              }
+              break;
+            }
+            case 3: { // scrolling text — fake by stripes
+              const off = (x + t*8) % 8;
+              const on = off < 4 && (y > 10 && y < 22) && (((x + Math.floor(t*8))^y) & 3);
+              if (on){
+                const hue = (x*8 + t*30) % 360;
+                [r,g,b] = hsl2rgb(hue,.9,.55);
+              }
+              break;
+            }
+            case 4: { // beat metaball
+              const beat = Math.max(0, Math.sin(t*4))**4;
+              let f=0;
+              const n=4;
+              for (let i=0;i<n;i++){
+                const ph = i*1.7 + t*(.6 + beat*.4);
+                const bx = 16 + Math.cos(ph)*9*(1+beat*.4);
+                const by = 16 + Math.sin(ph*1.3)*9*(1+beat*.4);
+                const dx=x-bx, dy=y-by; f += (5+beat*5)/(dx*dx+dy*dy+.5);
+              }
+              const v=Math.max(0,Math.min(1,(f-.6)*1.4));
+              const hue = (t*50 + v*40 + 20) % 360;
+              [r,g,b]=hsl2rgb(hue,.85,v*.55); break;
+            }
+            case 5: { // ice metaball — same shape, fixed palette
+              const beat = Math.max(0, Math.sin(t*3.5))**3;
+              let f=0;
+              for (let i=0;i<4;i++){
+                const ph = i*1.7 + t*.7;
+                const bx = 16 + Math.cos(ph)*9*(1+beat*.3);
+                const by = 16 + Math.sin(ph*1.3)*9*(1+beat*.3);
+                const dx=x-bx,dy=y-by;f += 6/(dx*dx+dy*dy+.5);
+              }
+              const v=Math.max(0,Math.min(1,(f-.7)*1.3));
+              r = v*60; g = v*180; b = v*255;
+              break;
+            }
+            case 6: { // camera-ish: scanlines + hue rot
+              const v = (Math.sin(x*.6 + t)*.5 + Math.sin(y*.4 - t*.7)*.5) * .5 + .5;
+              const hue = (t*30 + x*4) % 360;
+              [r,g,b] = hsl2rgb(hue,.5,v*.5);
+              // scatter
+              if (Math.random() < .04){ r+=80; g+=80; b+=80; }
+              break;
+            }
+          }
+          img.data[p]=Math.min(255,r); img.data[p+1]=Math.min(255,g); img.data[p+2]=Math.min(255,b); img.data[p+3]=255;
+          p += 4;
+        }
+      }
+      ctx.putImageData(img,0,0);
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+
+  function hsl2rgb(h,s,l){
+    h=((h%360)+360)%360; h/=360;
+    const a = s * Math.min(l,1-l);
+    const f = n => {
+      const k=(n+h*12)%12;
+      return Math.round(255 * (l - a * Math.max(-1, Math.min(k-3, 9-k, 1))));
+    };
+    return [f(0),f(8),f(4)];
+  }
+})();
+</script>
+
+</body>
+</html>
