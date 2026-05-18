@@ -4,8 +4,6 @@
 
 Drives a **Waveshare P2 64×64 HUB75E LED matrix** with real-time visual effects generated in TouchDesigner and streamed over ArtNet to a Raspberry Pi Zero 2W.
 
-![Signal flow: TouchDesigner → ArtNet UDP → Pi → LED Matrix]
-
 ---
 
 ## Hardware
